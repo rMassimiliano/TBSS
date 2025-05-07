@@ -7,7 +7,7 @@ To clone the repository and install the package, you can use the following code:
 ```
 git clone https://github.com/rMassimiliano/TBSS
 ```
-Within the tbss folder  
+Within the TBSS folder  
 ```
 R CMD build TBSS
 R CMD INSTALL TBSS
