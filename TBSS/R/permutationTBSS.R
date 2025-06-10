@@ -142,7 +142,7 @@ myTS = computeSS(myTS)
   ## Remove user specified node
   if(!is.null(nodeToRemove))
   {
-   myTS@nodesToTest = setdiff(myTS@nodeSS$node,nodeToRemove) 
+   myTS@nodesToTest = setdiff(myTS@nodesToTest,nodeToRemove) 
   }
 
 myTS = computeLRT(myTS) 

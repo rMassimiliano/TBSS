@@ -1,8 +1,8 @@
 Package: TBSS
 Type: Package
 Title: Tree Based Scan Statistics 
-Version: 1.5
-Date: 2025-02-28
+Version: 1.6
+Date: 2025-06-10
 Author: Massimiliano Russo
 Maintainer: Massimiliano Russo <russo.325@osu.edu>
 Description: Tree Based Scan Statistics (TBSS) are popular methods for disproportionality analyses with thousands of hierarchically related data. In these analyses, data are progressively aggregated according to a hierarchy. The highest observed disproportion across the aggregated data is used as a summary test statistic, and its null distribution is approximated via Monte Carlo (MC) methods to adjust for multiple comparisons. The general structure of TBSS is highly adaptable, requiring only three essential components: 1) a hierarchical structure, 2) a disproportionality statistic to be computed for each node of the hierarchy, and 3) an MC algorithm to generate replicates of the data under the null distribution. This  package implements several TBSS methods and provides the S4 class TS that can be used to exended them.

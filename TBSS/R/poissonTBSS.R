@@ -99,7 +99,7 @@ if(!(direction %in% c("positive","all","negative"))) stop("direction should be '
   ## Remove user specified node
   if(!is.null(nodeToRemove))
   {
-   myTS@nodesToTest = setdiff(myTS@nodeSS$node,nodeToRemove) 
+   myTS@nodesToTest = setdiff(myTS@nodesToTest, nodeToRemove) 
   }
 
   ## compute node-specific discrepancies and their distribution under the null
