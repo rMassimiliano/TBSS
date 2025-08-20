@@ -1,7 +1,7 @@
 Package: TBSS
 Type: Package
 Title: Tree Based Scan Statistics 
-Version: 1.6
+Version: 1.7
 Date: 2025-06-10
 Author: Massimiliano Russo
 Maintainer: Massimiliano Russo <russo.325@osu.edu>

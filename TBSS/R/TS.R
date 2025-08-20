@@ -44,65 +44,52 @@ listNodes = function(object)
 }
 
 
-#' Populate the slot mapNodesLeaves
 #' @description Create a named list. Each element of the list is named after a node and contains the ID of leaves linked to that node. The function returns an object of class TS with a populated slot \code{mapNodeLeaves}.
 #' @param object an object of class TS
-#' @param prune if \code{prune = TRUE} remove nodes for which we do not have data. If nodes are removed, print a warning. 
-#' @param parallel if \code{parallel = TRUE} parallel computing is used to compute the Monte Carlo p-values.
-#' @param ncpus number of cpus used if \code{parallel = TRUE}. If no value is provided, the default is \code{ncpus = detectCores() - 1}.
-
-mapNodesLeaves = function(object, prune = TRUE,parallel = FALSE, ncpus = NULL)
+#' @param ...  additional arguments (currently for retro-compatibility, not used)
+ 
+mapNodesLeaves =  function(object, ...)
 {
   if(length(object@leaves) == 0) object = listLeaves(object)
   if(length(object@nodes) == 0) object = listNodes(object)
-  get_path = function(node, prune)
+	
+  nodeList =  list()
+  # add leaves as themselves
+  for(i in seq_along(object@leaves))
   {
-     ## Leaves are only connected to
-     if(node %in% object@leaves)
-     {
-       return(node)
-     }
-     tmp = getLeaf(node,object@tree,object@leaves)
-     tmp = tmp[which(tmp %in% object@leaves)]
-     if(prune)
-     {
-      if(length(tmp) > 0){return(tmp)}
-      else{return(NULL)}
-     }
-     else
-     {
-       return(tmp)
-     }
+    nodeList[[object@leaves[i]]] = object@leaves[i]
   }
-  if(parallel)
+  ## initialized explored nodes (bfs) and not visited nodes
+  bfs = object@leaves
+  notvisited = setdiff(object@nodes, object@leaves) ## at starting point we only visited the leaf nodes
+
+  # start the tree exploration
+  while(TRUE)
   {
-   suppressMessages(require(parallel))
-   suppressMessages(require(TBSS))
-   cl <- makeCluster(ncpus)
-    clusterExport(cl, "get_path", envir = environment())
-    clusterExport(cl, "getLeaf", envir = environment())
-    clusterExport(cl, "object", envir = environment())
-    clusterExport(cl, "prune", envir = environment())
+   w          = object@tree[,1] %in% bfs
+   nextlevel  = unique(object@tree[w,2])
+   nextlevel  = intersect(nextlevel,notvisited)
+   notvisited = setdiff(notvisited,nextlevel)
 
-    nodeList = parLapply(cl, object@nodes,\(x) get_path(x,prune))
-    ind = parLapplyLB(cl,nodeList,length)
-    ind = which(ind > 0)
-    node_removed = length(nodeList) - length(ind)
-    stopCluster(cl)
+   if(all(nextlevel=="")) break
+   # go through all edges in w and add corresponding leaves
+		for(i in which(w)) {
+			child              = object@tree[i,1]
+			parent             = object@tree[i,2]
+			temp               = c(nodeList[[parent]],nodeList[[child]])
+			nodeList[[parent]] = unique(temp)
+		}
+		# next bfs sweep
+		bfs = nextlevel
    }
-   else
-   {
-   nodeList = lapply(object@nodes, \(x) get_path(x,prune))
-   ind = which(sapply(nodeList,length) > 0)
-   node_removed = length(nodeList) - length(ind)
-   }
-
-   names(nodeList)= object@nodes
-   nodeList = nodeList[ind]
-  object@mapNodesLeaves = nodeList
+ object@mapNodesLeaves = nodeList
+ node_removed  = length(unique(unlist(object@tree))) - length(nodeList)
   if(node_removed>0) warning(sprintf("We removed %i nodes from the analysis because no data have been provided for the corresponding leaves", node_removed))
-  return(object)
+  return(object) 
 }
+
+
+
 
 
 #' Compute node-specific sufficient statistics

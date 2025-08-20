@@ -1,4 +1,4 @@
-
+## internal functions used in a previous version of mapNodeLeaves (deprecated)
 getLeafGeneric = function(){
   result = vector("character")
   depth  = 0
