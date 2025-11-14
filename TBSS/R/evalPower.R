@@ -10,7 +10,7 @@
 
 #' @export
 evalPower = function(object,
-		     alternativeParameter = 0,
+		     alternativeParameter = 1,
 		     alternativeLeaves = NULL,
 		     alpha = 0.05,
 		     R =1000,
@@ -28,7 +28,7 @@ evalPower = function(object,
  {
   boot_object = object
   ## re-generate data under the alternative
-  boot_object = H1_gen(object,alternariveParameter, alternativeLeaves)
+  boot_object = H1_gen(object,alternativeParameter,, alternativeLeaves)
   statistic = max(TBSS:::computeLRT(boot_object)@LRT)
   return(statistic)
 }

@@ -12,6 +12,8 @@ setMethod("computeSS", signature(object = "unconditionalPoissonTS"), function(ob
 
   for(r in 1:length(object@mapNodesLeaves))
   {
+
+   #ind = which(object@data$leave %in% object@mapNodesLeaves[[r]])
    ind = which(object@leaves %in% object@mapNodesLeaves[[r]])
    object@nodeSS$node[r]     = names(object@mapNodesLeaves)[r]
    object@nodeSS$observed[r] = sum(object@data$observed[ind])
