@@ -28,7 +28,7 @@ evalPower = function(object,
  {
   boot_object = object
   ## re-generate data under the alternative
-  boot_object = H1_gen(object,alternativeParameter,, alternativeLeaves)
+  boot_object = H1_gen(object,alternativeParameter, alternativeLeaves)
   statistic = max(TBSS:::computeLRT(boot_object)@LRT)
   return(statistic)
 }
