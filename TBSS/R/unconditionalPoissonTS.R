@@ -104,7 +104,7 @@ setMethod("H1_gen", signature(object = "unconditionalPoissonTS"),
      object@nodeSS$observed[indx] = rpois(length(indx), object@nodeSS$expected[indx])
 
      ## Alternative leaves
-     indx = which(object@nodeSS$node %in% alternativeParameter)
+     indx = which(object@nodeSS$node %in% alternativeLeaves)
      object@nodeSS$observed[indx] = rpois(length(indx), object@nodeSS$expected[indx]*alternativeParameter)
   
      ## update only the SS for the nodes that are used in the LRT
