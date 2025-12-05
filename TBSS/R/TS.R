@@ -157,15 +157,6 @@ setMethod("H1_gen",signature(object = "TS"), function(object, alternativeParamet
 })
 
 
-# ---deprecated! to remove soon
-setGeneric("bootstrap", function(object,parallel = FALSE, ncpus = NULL) {
-  standardGeneric("bootstrap")
-})
-
-#setMethod("bootstrap", signature(object = "TS"), function(object) {
-#  stop("The bootstrap algorithm depends on the type of analysis. Use or implement and appropriate class")
-#})
-
 #' Monte Carlo algorithm 
 #' @description Function that approximates the null distribution of the node-specific discrepancy measures. Results are stored in the slot \code{LRT_H0} 
 #' @param object an object of class TS
@@ -226,7 +217,8 @@ setMethod(f = "summary",
 
           ranking = order(object@LRT,decreasing = TRUE)
           boot_maxs = apply(object@LRT_H0,2,max)
-          pvalues = sapply(object@LRT[ranking], \(x) sum(boot_maxs >= x)/(object@B +1))
+          pvalues = sapply(object@LRT[ranking], \(x) (sum(boot_maxs >= x) +1)/(object@B +1))
+
 
 	  
 	  retval = data.frame(node = object@nodesToTest[ranking],

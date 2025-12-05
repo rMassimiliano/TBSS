@@ -81,68 +81,6 @@ setMethod("H0_gen", signature(object = "unconditionalBernoulliTSVariableRR"),
 )
 
 
-#' generate a new tree under the global null H0
-##setMethod("bootstrap", signature(object = "unconditionalBernoulliTSVariableRR"),
-##function(object, parallel = FALSE, ncpus = NULL)
-##{
-##
-##  H_gen = function (object)
-##  {
-##    ## generate the leaves data under H0
-##    ## we generate data from the leaves even if these are not tested	  
-##     #leaves_list =  object@leaves[which(object@leaves %in% object@nodesToTest)]
-##
-##     ## generate leafs value from the data
-##      totals  = object@data$case + object@data$control
-##      probs   = object@data$p
-##      cases   = rbinom(length(totals), size = totals, prob = probs)
-##      controls = totals - cases
-##      object@data$case    = cases
-##      object@data$control = controls
-##
-##     # update nodes to test
-##     ind_set = 1:length(object@nodeSS$node)
-##     ind_set = ind_set[which(object@nodeSS$node[ind_set] %in% object@nodesToTest)]
-##     for(r in ind_set)
-##     {
-##      leaf = object@mapNodesLeaves[[object@nodeSS$node[r]]]
-##      object@nodeSS$case[r] =  sum(object@data$case[object@data$leaf %in% leaf])
-##      object@nodeSS$control[r] =  sum(object@data$control[object@data$leaf %in% leaf])
-##    }
-##    return(object)
-##  }
-##
-#### function that perform one bootstrap replicate
-##do_boot = function(...)
-##{
-## boot_object = object
-## ## re-generate data under the null
-## boot_object = H_gen(object)
-## retval = computeLRT(boot_object)@LRT
-## return(retval)
-##}
-##
-##if(parallel)
-##{
-## suppressMessages(require(parallel))
-## suppressMessages(require(TBSS))
-## cl <- makeCluster(ncpus)
-## clusterExport(cl, "do_boot", envir = environment())
-## clusterExport(cl, "H_gen", envir = environment())
-## clusterExport(cl, "object", envir = environment())
-## boot_LRT = parSapply(cl, 1:object@B, do_boot)
-## stopCluster(cl)
-##}
-##else
-##{
-## boot_LRT =  sapply(1:object@B, do_boot)
-##}
-##
-## object@boot_LRT = boot_LRT
-## return(object)
-##}
-##)
-
 
 
 
