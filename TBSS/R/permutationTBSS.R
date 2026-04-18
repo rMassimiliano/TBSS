@@ -10,7 +10,7 @@
 #'@param direction can be either \code{'positive'}, \code{"negative"} or, \code{"all"} by default (\code{direction = 'positive'}) poissonTBSS only look at nodes where the number of expected cases is larger than the number of observed cases, or equivalently the excess of cases is positive. Setting  \code{direction = '"all"'} test all nodes, while \code{direction  = "negative"} only node with negative excess of cases.
 #'@param nodeToRemove a character vector with user-specified nodes to be removed from the analysis.  Note that sufficient statistics for these nodes are computed, but they are excluded from the testing procedure. By removing nodes from the list of tests, power can increase because of the decreased number of hypotheses that are tested. This list should be specified before running the analysis.  
 #'@param washout_window  a numeric vector with two negative numbers that indicate the length  of the washout window relative to the index data. For example, if washout_window = c(-180,0) all diagnosis events that occurred in the 180 days before the index are used for washout. The defaul is \code{washout_window = c(-Inf,0)} indicating that all events before the index date are used for washout.
-#'@param offset  indicate how expected counts are scaled to be compared with observed counts. Possible values include "sum_of_weights" indicating that expected counts are scaled with  (N weighted total exposed / N weighted total comparator) and "unscaled" for no scaling. Alternative scaling can be used by directly scaling the weights in the cohort file, and using the "unscaled" option for offset
+#'@param offset  indicate how expected counts are scaled to be compared with observed counts. Possible values include "sum_of_weights" indicating that expected counts are scaled with  (N weighted total exposed / N weighted total comparator) and "unscaled" for no scaling. Alternative scaling can be used by directly scaling the weights in the cohort file, and using the "unscaled" option for offset. By default no scaling is applied.
 #'@param seed a number indicating the seed used for the analysis, i.e., the input of \code{set.seed()}. Default \code{seed  = 8277}.
 #' @param parsedParameters a names list of object that can be precomputed. This include mapNodeTree (i.e., the tree parsing step), and idInNode (the list of nodes/patients created by the \code{applyNodeSpecificWashout()} function).
 #'@param verbose, if \code{TRUE} (default) print some messages 
@@ -19,7 +19,7 @@
 #'@details Note if data regarding followup time is not provided we use the convention that all events in the diagnosis table occuring from the index date on (with the index date excluded) are used for the analysis. Similarly, all data preceding the index date (included) are used for washout. This behaivior can be changed by setting the \code{washout_window} argument and setting  the columns corresponding to the parameters for the follow-up in the cohort file appropriately.
 
 #'@export
-permutationTBSS = function(cohort, diagnosis_table,tree, min_events = 2, B = 999, parallel = FALSE, ncpus = NULL, nodeToRemove = NULL,washout_window = c(-Inf,0), direction = 'positive', offset = "sum_of_weights", seed  = 8277, parsedParameters = NULL, verbose = TRUE, relative = TRUE)
+permutationTBSS = function(cohort, diagnosis_table,tree, min_events = 2, B = 999, parallel = FALSE, ncpus = NULL, nodeToRemove = NULL,washout_window = c(-Inf,0), direction = 'positive', offset = "unscaled", seed  = 8277, parsedParameters = NULL, verbose = TRUE, relative = TRUE)
 {
 match.arg(offset, c("sum_of_weights", "unscaled"))
 set.seed(seed)
@@ -33,7 +33,7 @@ if(min_events < 2) stop("min_events should be a number greater than 2.")
   ncpus = detectCores() - 1
  }
 
-## names data appropriatly - assumng correct order of the colum
+## names data appropriately - assuming correct order of the columns
 
 fup = FALSE
 names(cohort)[1:5] = c('patientID', 'indexDate', 'exposure','weight', 'strata')
@@ -133,11 +133,11 @@ myTS = computeSS(myTS)
 ## Remove nodes with a number of events lower than min_events 
    if(direction == 'positive')
    {
-    myTS@nodesToTest = myTS@nodeSS$node[(myTS@nodeSS$observed >= min_events) & ((myTS@nodeSS$observed - myTS@nodeSS$expected)>0) & (myTS@nodeSS$expected>0)]
+  myTS@nodesToTest = myTS@nodeSS$node[(myTS@nodeSS$observed >= min_events) & ((myTS@nodeSS$observed/myTS@nodeSS$observed_pt - myTS@nodeSS$expected/myTS@nodeSS$expected_pt)>0) & (myTS@nodeSS$expected>0)]
    }
    else if (direction == 'negative')
    {
-     myTS@nodesToTest = myTS@nodeSS$node[(myTS@nodeSS$observed >= min_events) & ((myTS@nodeSS$observed - myTS@nodeSS$expected)<0 &(myTS@nodeSS$expected>0) )] 
+     myTS@nodesToTest = myTS@nodeSS$node[(myTS@nodeSS$observed >= min_events) & ((myTS@nodeSS$observed/myTS@nodeSS$observed_pt - myTS@nodeSS$expected/myTS@nodeSS$expected_pt)<0 &(myTS@nodeSS$expected>0) )]
    }
    else
    {

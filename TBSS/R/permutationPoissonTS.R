@@ -106,8 +106,8 @@ setMethod(f = "summary",
 	   suppressMessages({
 	retval =   retval |>
 	           full_join(object@nodeSS) |>
-	           mutate(relativeRisk = observed/expected, excessCases = observed - expected) |>
-	           select(node,observed, expected,relativeRisk, excessCases,LRT,pvalue) 
+	           mutate(relativeRisk = (observed/observed_pt)/(expected/expected_pt), excessCases = observed/observed_pt - expected/expected_pt) |>
+	           select(node,observed/observed_pt, expected/expected_pt,relativeRisk, excessCases,LRT,pvalue) 
 	  })
 	  }
 	  else
