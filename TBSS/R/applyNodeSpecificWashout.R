@@ -14,6 +14,7 @@ applyNodeSpecificWashout = function(object,washData, inputData)
 {
  retval = list()
  personTime = list()
+ personTimeNotInR = list()
 for(r in 1:length(object@mapNodesLeaves))
 {
   ## unique patients IDs to keep 
@@ -63,6 +64,12 @@ for(r in 1:length(object@mapNodesLeaves))
 	    fups2 = fups[0,]
     }
 
+    ## person time (full follow-up length) for individuals not associated with node r at all
+    notInR = object@cohort[!(object@cohort$patientID %in% allNodeID),]
+    notInR$followup = with(notInR, followupEnd - followupStart)
+    notInR$wft = with(notInR, weight * followup)
+    personTimeNotInR[[r]] = notInR[, c('patientID','followup','exposure','weight','wft')]
+
     # add folloup time to the "sufficient" statistics -- no need  because the information is in person time
     retval[[r]]  = left_join(retval[[r]], fups, by = 'patientID')
 
@@ -85,6 +92,8 @@ if(object@fup)
 {
  object@personTime = personTime
  names(object@personTime) = names(object@mapNodesLeaves)
+ object@personTimeNotInNode = personTimeNotInR
+ names(object@personTimeNotInNode) = names(object@mapNodesLeaves)
 }
 
 return(object)

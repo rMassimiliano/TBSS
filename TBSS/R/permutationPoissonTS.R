@@ -3,7 +3,7 @@
 ### Unconditional Possion Tree Scan
 #############################################
 #############################################
-setClass(Class = "permutationPoissonTS",  contains = 'TS', slots = c(idInNode = 'list',personTime = 'list', cohort = 'data.frame', fup = 'logical')) 
+setClass(Class = "permutationPoissonTS",  contains = 'TS', slots = c(idInNode = 'list',personTime = 'list',personTimeNotInNode = 'list', cohort = 'data.frame', fup = 'logical')) 
 
 
 setMethod("computeSS", signature(object = "permutationPoissonTS"), function(object)
@@ -18,10 +18,12 @@ setMethod("computeSS", signature(object = "permutationPoissonTS"), function(obje
    object@nodeSS$expected[r] = sum( object@idInNode[[r]]$weight* (object@idInNode[[r]]$exposure == 0))
    if(object@fup)
    {
-        object@nodeSS$expected_pt[r] = with(dplyr::filter(object@idInNode[[r]],exposure == 0), sum(weight*followup)) + with(dplyr::filter(object@personTime[[r]],exposure == 0), sum(weight*followup)) 
+    ## combine person time for censored and not in node
+    combined_pt = rbind(object@personTime[[r]], object@personTimeNotInNode[[r]])
 
+    object@nodeSS$expected_pt[r] = with(dplyr::filter(object@idInNode[[r]],exposure == 0), sum(weight*followup)) + with(dplyr::filter(combined_pt,exposure == 0), sum(weight*followup)) 
 
-        object@nodeSS$observed_pt[r] =  with(dplyr::filter(object@idInNode[[r]],exposure == 1), sum(weight*followup)) + with(dplyr::filter(object@personTime[[r]],exposure == 1), sum(weight*followup)) 
+    object@nodeSS$observed_pt[r] =  with(dplyr::filter(object@idInNode[[r]],exposure == 1), sum(weight*followup)) + with(dplyr::filter(combined_pt,exposure == 1), sum(weight*followup)) 
    }
 
   }
@@ -78,7 +80,12 @@ function (object)
         tmp_cohort = permuted_cohort[permuted_cohort$patientID %in% object@personTime[[r]]$patientID,]
       	object@personTime[[r]]$exposure =tmp_cohort$exposure
       	object@personTime[[r]]$weight = tmp_cohort$weight
-      object@personTime[[r]]$wft = with(object@personTime[[r]], weight*followup)
+        object@personTime[[r]]$wft = with(object@personTime[[r]], weight*followup)
+
+        tmp_cohort = permuted_cohort[permuted_cohort$patientID %in% object@personTimeNotInNode[[r]]$patientID,]
+      	object@personTimeNotInNode[[r]]$exposure =tmp_cohort$exposure
+      	object@personTimeNotInNode[[r]]$weight = tmp_cohort$weight
+        object@personTimeNotInNode[[r]]$wft = with(object@personTimeNotInNode[[r]], weight*followup)
       }
      }
      ## compute SS 
