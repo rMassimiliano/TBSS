@@ -114,7 +114,8 @@ setMethod(f = "summary",
 	retval =   retval |>
 	           full_join(object@nodeSS) |>
 	           mutate(relativeRisk = (observed/observed_pt)/(expected/expected_pt), excessCases = observed/observed_pt - expected/expected_pt) |>
-	           select(node,observed/observed_pt, expected/expected_pt,relativeRisk, excessCases,LRT,pvalue) 
+		   mutate(observed_rate = observed/observed_pt, expected_rate = expected/expected_pt) |>
+	           select(node,observed_rate, expected_rate,relativeRisk, excessCases,LRT,pvalue) 
 	  })
 	  }
 	  else
