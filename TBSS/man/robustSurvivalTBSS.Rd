@@ -53,5 +53,5 @@ head(dat)
 
 mod_tbss = robustSurvivalTBSS(data = dat, tree = tree_example, direction = 'all')
 # inspect potential signals
-summary(mod_tbss) |> filter(pvalue <=0.05)
+summary(mod_tbss) |> dplyr::filter(pvalue <=0.05)
 }

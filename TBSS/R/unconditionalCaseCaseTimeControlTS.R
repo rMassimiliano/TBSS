@@ -103,8 +103,8 @@ setMethod(f = "summary",
           rownames(retval) = NULL
 	  suppressMessages({
 	retval =   retval |>
-	           full_join(object@nodeSS) |>
-	           select(node, case_reference, control_reference, case_hazard, control_hazard,LRT,pvalue) })
+	            dplyr::full_join(object@nodeSS) |>
+	            dplyr::select(node, case_reference, control_reference, case_hazard, control_hazard,LRT,pvalue) })
 	  return(retval)
 	  })
 

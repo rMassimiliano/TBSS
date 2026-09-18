@@ -71,13 +71,11 @@ for(r in 1:length(object@mapNodesLeaves))
     personTimeNotInR[[r]] = notInR[, c('patientID','followup','exposure','weight','wft')]
 
     # add folloup time to the "sufficient" statistics -- no need  because the information is in person time
-    retval[[r]]  = left_join(retval[[r]], fups, by = 'patientID')
+    retval[[r]]  =  dplyr::left_join(retval[[r]], fups, by = 'patientID')
 
 
-   #ptime = rbind.data.frame(fups,fups2)
-   #ptime = left_join(object@cohort |> filter(patientID %in% ptime$patientID) |> select(patientID, exposure,weight), ptime, by = 'patientID')
 
-   ptime = left_join(fups2, object@cohort |> filter(patientID %in% fups2$patientID) |> select(patientID, exposure,weight),  by = 'patientID')
+   ptime = dplyr::left_join(fups2, object@cohort |> dplyr::filter(patientID %in% fups2$patientID) |> dplyr::select(patientID, exposure,weight),  by = 'patientID')
 
    ptime$wft = with(ptime,weight * followup)
 

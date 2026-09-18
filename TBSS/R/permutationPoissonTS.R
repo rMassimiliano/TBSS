@@ -56,8 +56,6 @@ setMethod("H0_gen", signature(object = "permutationPoissonTS"),
 function (object)
 {
     ## generate the leaves data under H0
-    ## we generate data from the leaves even if these are not tested	  
-  #permuted_cohort = object@cohort |> select(strata,exposure,weight) |>  group_by(strata,exposure) |> slice_sample(prop = 1)
 
 	## it is ordered by strata
   permuted_cohort = object@cohort |> dplyr::select(patientID,strata) |>  dplyr::group_by(strata) |> dplyr::slice_sample(prop = 1)
@@ -112,19 +110,19 @@ setMethod(f = "summary",
 	  {
 	   suppressMessages({
 	retval =   retval |>
-	           full_join(object@nodeSS) |>
-	           mutate(relativeRisk = (observed/observed_pt)/(expected/expected_pt), excessCases = observed/observed_pt - expected/expected_pt) |>
-		   mutate(observed_rate = observed/observed_pt, expected_rate = expected/expected_pt) |>
-	           select(node,observed_rate, expected_rate,relativeRisk, excessCases,LRT,pvalue) 
+	           dplyr::full_join(object@nodeSS) |>
+	            dplyr::mutate(relativeRisk = (observed/observed_pt)/(expected/expected_pt), excessCases = observed/observed_pt - expected/expected_pt) |>
+		    dplyr::mutate(observed_rate = observed/observed_pt, expected_rate = expected/expected_pt) |>
+	            dplyr::select(node,observed_rate, expected_rate,relativeRisk, excessCases,LRT,pvalue) 
 	  })
 	  }
 	  else
 	  {
 	   suppressMessages({
 	    retval =   retval |>
-	           full_join(object@nodeSS) |>
-	           mutate(relativeRisk = observed/expected, excessCases = observed - expected) |>
-	           select(node,observed,expected,relativeRisk, excessCases,LRT,pvalue) 
+	            dplyr::full_join(object@nodeSS) |>
+	            dplyr::mutate(relativeRisk = observed/expected, excessCases = observed - expected) |>
+	            dplyr::select(node,observed,expected,relativeRisk, excessCases,LRT,pvalue) 
 	  })
 	  }
 	  return(retval)

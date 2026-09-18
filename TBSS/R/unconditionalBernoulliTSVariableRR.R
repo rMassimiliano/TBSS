@@ -97,9 +97,9 @@ pvalues = sapply(object@LRT[ranking], \(x) (sum(boot_maxs >= x) +1)/(object@B +1
 		                     pvalue =  pvalues)
 
           suppressMessages({
-		  retval = retval |> full_join(object@nodeSS) |>
-		   select(node,case,control,expected,relativeRisk, excessCases,LRT,pvalue);
-		  retval = retval |> arrange(pvalue);
+		  retval = retval |> dplyr::full_join(object@nodeSS) |>
+		  dplyr::select(node,case,control,expected,relativeRisk, excessCases,LRT,pvalue);
+		  retval = retval |> dplyr::arrange(pvalue);
 		  rownames(retval) = NULL;
 	          })
 

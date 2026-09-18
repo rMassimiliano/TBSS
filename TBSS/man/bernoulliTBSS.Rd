@@ -72,7 +72,7 @@ mod_tbss = bernoulliTBSS(case = data_treated,
                         tree = tree_example, 
                          p = matching_prob )
 # inspect potential signals
-summary(mod_tbss) |> filter(pvalue <=0.05)
+summary(mod_tbss) |> dplyr::filter(pvalue <=0.05)
 
 
 ## Bernoulli TBSS stratified (e.g., for matched data with variable matching ratio) 
@@ -93,5 +93,5 @@ head(data_untreated)
 mod_tbss = bernoulliTBSS(case = data_treated, control = data_untreated, tree = tree_example, type ='variableMR')
 
 # inspect potential signals
-summary(mod_tbss) |> filter(pvalue <=0.05)
+summary(mod_tbss) |> dplyr::filter(pvalue <=0.05)
 }

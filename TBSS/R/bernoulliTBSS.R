@@ -42,7 +42,7 @@
 #'                         tree = tree_example, 
 #'                          p = matching_prob )
 #' # inspect potential signals
-#' summary(mod_tbss) |> filter(pvalue <=0.05)
+#' summary(mod_tbss) |> dplyr::filter(pvalue <=0.05)
 #'
 #'
 #' ## Bernoulli TBSS stratified (e.g., for matched data with variable matching ratio) 
@@ -63,7 +63,7 @@
 #' mod_tbss = bernoulliTBSS(case = data_treated, control = data_untreated, tree = tree_example, type ='variableMR')
 #'
 #' # inspect potential signals
-#' summary(mod_tbss) |> filter(pvalue <=0.05)
+#' summary(mod_tbss) |> dplyr::filter(pvalue <=0.05)
 
 bernoulliTBSS =  function(case,control,tree, p = 1/2, min_events = 2, B = 999, parallel = FALSE, ncpus = NULL, type ='unconditional', nodeToRemove = NULL, seed  = 8277)
 {
@@ -77,15 +77,15 @@ if(min_events < 2) stop("min_events should be a number greater than 2.")
   names(control) = c("leaf", "control")
   data =  case |> dplyr::full_join(control, by = 'leaf') |> as.data.frame()
   ## NAs are 0s.
-  data = data |> dplyr::mutate_at(2:3,\(x) coalesce(x,0L))
+  data = data |> dplyr::mutate_at(2:3,\(x) dplyr::coalesce(x,0L))
  }
  else if(type == 'variableMR')
  {
   names(case) = c("leaf", "case","p")
   names(control) = c("leaf", "control","p")
-data =  case |> dplyr::full_join(control, by = c('leaf','p')) |> select('leaf', 'case', 'control','p') |>as.data.frame() 
+data =  case |> dplyr::full_join(control, by = c('leaf','p')) |> dplyr::select('leaf', 'case', 'control','p') |>as.data.frame() 
 
-  data = data |> dplyr::mutate_at(2:3,\(x) coalesce(x,0L))
+  data = data |> dplyr::mutate_at(2:3,\(x) dplyr::coalesce(x,0L))
  } 
  else stop(sprintf("invalid type %s \n", type))
 

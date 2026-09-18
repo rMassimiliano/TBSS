@@ -29,21 +29,21 @@
 #'mod_tbss = poissonTBSS(data = dat,
 #'                         tree = tree_example)
 #' # inspect potential signals
-#' summary(mod_tbss) |> filter(pvalue <=0.05)
+#' summary(mod_tbss) |> dplyr::filter(pvalue <=0.05)
 #'
 # # consider also node with expected < observed
 #'mod_tbss = poissonTBSS(data = dat,
 #'                       tree = tree_example,
 #'                       direction = 'all')
 #' # inspect potential signals
-#' summary(mod_tbss) |> filter(pvalue <=0.05)
+#' summary(mod_tbss) |> dplyr::filter(pvalue <=0.05)
 #'
 #' # conditional analysis
 #' mod_tbss_cond = poissonTBSS(data = dat,
 #'                         tree = tree_example,
 #'                         type = 'conditional'  )
 #' # inspect potential signals
-#' summary(mod_tbss_cond) |> filter(pvalue <=0.05)
+#' summary(mod_tbss_cond) |> dplyr::filter(pvalue <=0.05)
 poissonTBSS =  function(data,tree, min_events = 2, B = 999, parallel = FALSE, ncpus = NULL, type ='unconditional', direction = 'positive', nodeToRemove = NULL, seed  = 8277)
 {
 set.seed(seed)

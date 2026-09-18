@@ -87,13 +87,13 @@ setMethod(f = "summary",
 		                     pvalue =  pvalues)
 
           suppressMessages({
-		  retval = retval |> full_join(object@nodeSS);
+		  retval = retval |> dplyr::full_join(object@nodeSS);
                   retval = retval |>
-	           mutate(expected = (control +case)*object@p) |>
-		   mutate(relativeRisk =  case/expected,
-			  excessCases = case - expected) |>
-		   select(node,case,control, expected, relativeRisk, excessCases, LRT,pvalue);
-		  retval = retval |> arrange(pvalue);
+	           dplyr::mutate(expected = (control +case)*object@p) |>
+		   dplyr::mutate(relativeRisk =  case/expected, excessCases = case - expected) |>
+		   dplyr::select(node,case,control, expected, relativeRisk, excessCases, LRT,pvalue);
+		  retval = retval |> 
+			  dplyr::arrange(pvalue);
 		  rownames(retval) = NULL;
 	          })
 

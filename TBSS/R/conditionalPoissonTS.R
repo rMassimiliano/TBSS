@@ -97,11 +97,10 @@ setMethod(f = "summary",
           rownames(retval) = NULL
 	  suppressMessages({
 	retval =   retval |>
-	           full_join(object@nodeSS) |>
-	           mutate(relativeRisk = (observed/expected)/((TOTAL_OBSERVED - observed)/(TOTAL_EXPECTED - expected)), 
-			  excessCases = observed - expected *(TOTAL_OBSERVED -observed)/(TOTAL_EXPECTED - expected)) |>
-		   mutate(expected = expected * TOTAL_OBSERVED/TOTAL_EXPECTED) |>
-	           select(node,observed,expected,relativeRisk, excessCases,LRT,pvalue) 
+	           dplyr::full_join(object@nodeSS) |>
+	           dplyr::mutate(relativeRisk = (observed/expected)/((TOTAL_OBSERVED - observed)/(TOTAL_EXPECTED - expected)), excessCases = observed - expected *(TOTAL_OBSERVED -observed)/(TOTAL_EXPECTED - expected)) |>
+		   dplyr::mutate(expected = expected * TOTAL_OBSERVED/TOTAL_EXPECTED) |>
+	           dplyr::select(node,observed,expected,relativeRisk, excessCases,LRT,pvalue) 
 	  })
 	  return(retval)
 	  })

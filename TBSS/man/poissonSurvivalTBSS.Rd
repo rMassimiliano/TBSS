@@ -46,12 +46,12 @@ library(TBSS)
 data("tree_example", package = 'TBSS')
 # load data
 data("survival_poisson_example", package = 'TBSS')
-dat =  survival_poisson_example |> select(leaf, events_case, total_person_time_case, events_control, total_person_time_control)
+dat =  survival_poisson_example |> dplyr::select(leaf, events_case, total_person_time_case, events_control, total_person_time_control)
 head(dat)
 
 
 
 mod_tbss = poissonSurvivalTBSS(data = dat, tree = tree_example, direction = 'all')
 # inspect potential signals
-summary(mod_tbss) |> filter(pvalue <=0.05)
+summary(mod_tbss) |> dplyr::filter(pvalue <=0.05)
 }

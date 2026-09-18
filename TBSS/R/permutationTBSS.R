@@ -78,7 +78,7 @@ diagnosis_table = diagnosis_table[to_keep,]
 
 ## 2nd divide diagnosis table in two: pre and post washout window
  # add the index date from cohort
-diagnosis_table =  left_join(diagnosis_table, cohort, by= 'patientID') 
+diagnosis_table =   dplyr::left_join(diagnosis_table, cohort, by= 'patientID') 
 ## create a variable indicatings date from index
 diagnosis_table$time = with(diagnosis_table, date - indexDate)
 if(fup)

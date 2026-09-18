@@ -81,9 +81,9 @@ setMethod(f = "summary",
           rownames(retval) = NULL
 	  suppressMessages({
 	retval =   retval |>
-	           full_join(object@nodeSS) |>
-	           mutate(relativeRisk = observed/expected, excessCases = observed - expected) |>
-	           select(node,observed,expected,relativeRisk, excessCases,LRT,pvalue) 
+	            dplyr::full_join(object@nodeSS) |>
+	            dplyr::mutate(relativeRisk = observed/expected, excessCases = observed - expected) |>
+	            dplyr::select(node,observed,expected,relativeRisk, excessCases,LRT,pvalue) 
 	  })
 	  return(retval)
 	  })
