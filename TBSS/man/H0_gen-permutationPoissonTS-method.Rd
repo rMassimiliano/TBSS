@@ -2,10 +2,10 @@
 % Please edit documentation in R/permutationPoissonTS.R
 \name{H0_gen,permutationPoissonTS-method}
 \alias{H0_gen,permutationPoissonTS-method}
-\title{generate data under the null via permutation of the data}
+\title{generate data under the null via permutation of the lables}
 \usage{
 \S4method{H0_gen}{permutationPoissonTS}(object)
 }
 \description{
-generate data under the null via permutation of the data
+generate data under the null via permutation of the lables
 }

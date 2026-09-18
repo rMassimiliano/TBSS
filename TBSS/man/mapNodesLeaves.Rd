@@ -2,18 +2,14 @@
 % Please edit documentation in R/TS.R
 \name{mapNodesLeaves}
 \alias{mapNodesLeaves}
-\title{Populate the slot mapNodesLeaves}
+\title{Map nodes to the corresponding leaves}
 \usage{
-mapNodesLeaves(object, prune = TRUE, parallel = FALSE, ncpus = NULL)
+mapNodesLeaves(object, ...)
 }
 \arguments{
 \item{object}{an object of class TS}
 
-\item{prune}{if \code{prune = TRUE} remove nodes for which we do not have data. If nodes are removed, print a warning.}
-
-\item{parallel}{if \code{parallel = TRUE} parallel computing is used to compute the Monte Carlo p-values.}
-
-\item{ncpus}{number of cpus used if \code{parallel = TRUE}. If no value is provided, the default is \code{ncpus = detectCores() - 1}.}
+\item{...}{additional arguments (currently for retro-compatibility, not used)}
 }
 \description{
 Create a named list. Each element of the list is named after a node and contains the ID of leaves linked to that node. The function returns an object of class TS with a populated slot \code{mapNodeLeaves}.

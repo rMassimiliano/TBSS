@@ -13,7 +13,6 @@
 #'@export
 #'@examples 
 #' ## Unconditional Poisson TBSS examples
-#' library(dplyr)
 #' library(TBSS)
 #'
 #' # load tree 
@@ -25,7 +24,6 @@
 #' dat = poisson_TBSS_example
 #' head(dat)
 #'
-#' head(dat)
 #'
 #'
 #'mod_tbss = poissonTBSS(data = dat,
@@ -46,7 +44,6 @@
 #'                         type = 'conditional'  )
 #' # inspect potential signals
 #' summary(mod_tbss_cond) |> filter(pvalue <=0.05)
-
 poissonTBSS =  function(data,tree, min_events = 2, B = 999, parallel = FALSE, ncpus = NULL, type ='unconditional', direction = 'positive', nodeToRemove = NULL, seed  = 8277)
 {
 set.seed(seed)

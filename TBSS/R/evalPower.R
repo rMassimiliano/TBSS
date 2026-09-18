@@ -35,15 +35,13 @@ evalPower = function(object,
 
 if(parallel)
 {
- suppressMessages(require(parallel))
- suppressMessages(require(TBSS))
- cl <- makeCluster(ncpus)
- clusterExport(cl, "do_MC_pow", envir = environment())
- clusterExport(cl, "object", envir = environment())
- clusterExport(cl, "alternariveParameter", envir = environment())
- clusterExport(cl, "alternativeLeaves", envir = environment())
- T_alternative = parSapply(cl, 1:R, do_MC_pow)
- stopCluster(cl)
+ cl <- parallel::makeCluster(ncpus)
+ parallel::clusterExport(cl, "do_MC_pow", envir = environment())
+ parallel::clusterExport(cl, "object", envir = environment())
+ parallel::clusterExport(cl, "alternariveParameter", envir = environment())
+ parallel::clusterExport(cl, "alternativeLeaves", envir = environment())
+ T_alternative = parallel::parSapply(cl, 1:R, do_MC_pow)
+ parallel::stopCluster(cl)
 }
 else
 {

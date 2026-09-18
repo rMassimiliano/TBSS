@@ -1,4 +1,5 @@
-## internal functions used in a previous version of mapNodeLeaves (deprecated)
+#' Functions to get leaves from each node
+#'@description internal functions used in a previous version of mapNodeLeaves (deprecated)
 getLeafGeneric = function(){
   result = vector("character")
   depth  = 0
@@ -37,7 +38,6 @@ getLeafGeneric = function(){
 #'@param `node` a character vector with the id of a node
 #'@param `tree`: a data.frame with two columns. The first column is the id of each node of a tree while the second is its direct ancestor. Root node as no ancestor that is represented with "".
 #'@param `leafs`:  a list of the terminal nodes, i.e. the leaves
-
 getLeaf = function(node,tree,leafs)
 {
   leafs_fun = getLeafGeneric()

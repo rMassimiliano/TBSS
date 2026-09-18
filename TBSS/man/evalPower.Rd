@@ -6,7 +6,7 @@
 \usage{
 evalPower(
   object,
-  alternativeParameter = 0,
+  alternativeParameter = 1,
   alternativeLeaves = NULL,
   alpha = 0.05,
   R = 1000,

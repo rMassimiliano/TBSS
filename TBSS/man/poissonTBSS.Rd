@@ -55,7 +55,6 @@ data("poisson_TBSS_examples", package = 'TBSS')
 dat = poisson_TBSS_example
 head(dat)
 
-head(dat)
 
 
 mod_tbss = poissonTBSS(data = dat,

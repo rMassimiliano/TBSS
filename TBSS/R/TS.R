@@ -44,10 +44,10 @@ listNodes = function(object)
 }
 
 
+#' Map nodes to the corresponding leaves 
 #' @description Create a named list. Each element of the list is named after a node and contains the ID of leaves linked to that node. The function returns an object of class TS with a populated slot \code{mapNodeLeaves}.
 #' @param object an object of class TS
 #' @param ...  additional arguments (currently for retro-compatibility, not used)
- 
 mapNodesLeaves =  function(object, ...)
 {
   if(length(object@leaves) == 0) object = listLeaves(object)
@@ -97,7 +97,6 @@ mapNodesLeaves =  function(object, ...)
 #' @param object an object of class TS
 #' @param parallel if \code{parallel = TRUE} parallel computing is used to compute the Monte Carlo p-values.
 #' @param ncpus number of cpus used if \code{parallel = TRUE}. If no value is provided, the default is \code{ncpus = detectCores() - 1}.
-
 setGeneric("computeSS", function(object, parallel = FALSE, ncpus = NULL) {
   standardGeneric("computeSS")
 })
@@ -114,12 +113,9 @@ setMethod("computeSS", signature(object = "TS"), function(object,parallel = FALS
 #' @param object an object of class TS
 #' @param parallel if \code{parallel = TRUE} parallel computing is used to compute the Monte Carlo p-values.
 #' @param ncpus number of cpus used if \code{parallel = TRUE}. If no value is provided, the default is \code{ncpus = detectCores() - 1}.
-
 setGeneric("computeLRT", function(object, parallel = FALSE, ncpus = NULL) {
   standardGeneric("computeLRT")
 })
-
-
 
 # Compute the LRT. The expression depends on the model
 setMethod("computeLRT", signature(object = "TS"), function(object,parallel = FALSE, ncpus = NULL) {
@@ -129,7 +125,6 @@ setMethod("computeLRT", signature(object = "TS"), function(object,parallel = FAL
 #' Generate data under the null distribution
 #' @description generic function to generate data under the null distribution. Instances of this function are used in \code{monteCarlo} 
 #' @param object an object of class TS
-
 # Regenerate the data in TS under the null distribution 
 setGeneric("H0_gen", function(object) {
   standardGeneric("H0_gen")
@@ -177,13 +172,11 @@ setMethod("H1_gen",signature(object = "TS"), function(object, alternativeParamet
 }
 if(parallel)
 {
- suppressMessages(require(parallel))
- suppressMessages(require(TBSS))
- cl <- makeCluster(ncpus)
- clusterExport(cl, "do_MC", envir = environment())
- clusterExport(cl, "object", envir = environment())
- boot_LRT = parSapply(cl, 1:object@B, do_MC)
- stopCluster(cl)
+ cl <- parallel::makeCluster(ncpus)
+ parallel::clusterExport(cl, "do_MC", envir = environment())
+ parallel::clusterExport(cl, "object", envir = environment())
+ boot_LRT = parallel::parSapply(cl, 1:object@B, do_MC)
+ parallel::stopCluster(cl)
 }
 else
 {
@@ -210,7 +203,7 @@ setMethod(f = "show",
 
 
 
-#' @export
+#'@export
 setMethod(f = "summary",
           signature = "TS",
           definition = function(object){

@@ -13,8 +13,9 @@ permutationTBSS(
   parallel = FALSE,
   ncpus = NULL,
   nodeToRemove = NULL,
+  washout_window = NULL,
   direction = "positive",
-  offset = "sum_of_weights",
+  offset = "unscaled",
   seed = 8277,
   parsedParameters = NULL,
   verbose = TRUE,
@@ -22,7 +23,7 @@ permutationTBSS(
 )
 }
 \arguments{
-\item{cohort}{a \code{matrix} or \code{data.frame} with  five or seven columns (two are optionals)  that are ('patientID', 'indexDate', 'exposure','weight', 'strata') and followupStart (0 corresponding to index data) followupEnd end of folloupTime. Strata are used for permutation and can correspond, for example, to matched observation. If all strata are equal (e.g., to 1) observations are assumed to be exchangeable. Weight is used to differentially weight observations. The followup time, if provided, is used as an offset to test differences in rates rather than means.  Note that IndexData is expected in date format (use R function as.Date() for a valid input)}
+\item{cohort}{a \code{matrix} or \code{data.frame} with  five or seven columns (two are optionals)  that are ('patientID', 'indexDate', 'exposure','weight', 'strata') and followupStart (0 corresponding to index data) followupEnd end of folloupTime. Strata are used for permutation and can correspond, for example, to matched observation. If all strata are equal (e.g., to 1) observations are assumed to be exchangeable. Weight is used to differentially weight observations. The followup time, if provided, is used as an offset to test differences in rates rather than means.  Note that IndexDate is expected in date format (use R function as.Date() for a valid input).}
 
 \item{diagnosis_table}{a \code{matrix} or \code{data.frame} with three or four columns. The first three are 'patientID', 'date', 'leaf'. The date refer to occurrences of the event codified by leaf. Patients can have multiple events (there will be no double counting). date is expected to be in date format (use R function as.Date() for a valid input), while leaf are treated as characters. A fourth optional column ('include') is a binary variable that indicates if some events have to be censored. Censored events (time) counts in terms of person time and the events are used for the washout but not  in the analysis.}
 
@@ -38,9 +39,11 @@ permutationTBSS(
 
 \item{nodeToRemove}{a character vector with user-specified nodes to be removed from the analysis.  Note that sufficient statistics for these nodes are computed, but they are excluded from the testing procedure. By removing nodes from the list of tests, power can increase because of the decreased number of hypotheses that are tested. This list should be specified before running the analysis.}
 
+\item{washout_window}{a numeric vector with two negative numbers that indicate the length  of the washout window relative to the index data. For example, if washout_window = c(-180,-1) all diagnosis events that occurred in the 180 days (including days -180 and -1)  before the index are used for washout. The defaul is \code{washout_window = NULL} indicating that all events before the index date (excluded) are used for washout.}
+
 \item{direction}{can be either \code{'positive'}, \code{"negative"} or, \code{"all"} by default (\code{direction = 'positive'}) poissonTBSS only look at nodes where the number of expected cases is larger than the number of observed cases, or equivalently the excess of cases is positive. Setting  \code{direction = '"all"'} test all nodes, while \code{direction  = "negative"} only node with negative excess of cases.}
 
-\item{offset}{indicate how expected counts are scaled to be compared with observed counts. Possible values include "sum_of_weights" indicating that expected counts are scaled with  (N weighted total exposed / N weighted total comparator) and "unscaled" for no scaling. Alternative scaling can be used by directly scaling the weights in the cohort file, and using the "unscaled" option for offset}
+\item{offset}{indicate how expected counts are scaled to be compared with observed counts. Possible values include "sum_of_weights" indicating that expected counts are scaled with  (N weighted total exposed / N weighted total comparator) and "unscaled" for no scaling. Alternative scaling can be used by directly scaling the weights in the cohort file, and using the "unscaled" option for offset. By default no scaling is applied.}
 
 \item{seed}{a number indicating the seed used for the analysis, i.e., the input of \code{set.seed()}. Default \code{seed  = 8277}.}
 
@@ -52,4 +55,7 @@ permutationTBSS(
 }
 \description{
 This function implements a permutation based TBSS. The function uses as test the likelihood ratio test (LRT) to compare difference in mean of two Poisson distribution and can include offsets (e.g., the person time for the exposure groups). The null distribution for the LRT is computed  using permutation. Hence, unlike other TBSS this implementation require subject level data. Importantly this implementation can use node-specifyc washout, i.e. for each node it does not count patients  that have already experienced the events codified in the node in a pre-specified washout window.
+}
+\details{
+Note if data regarding followup time is not provided we use the convention that all events in the diagnosis table occuring from the index date on (with the index date excluded) are used for the analysis. Similarly, all data preceding the index date (included) are used for washout. This behaivior can be changed by setting the \code{washout_window} argument and setting  the columns corresponding to the parameters for the follow-up in the cohort file appropriately.
 }

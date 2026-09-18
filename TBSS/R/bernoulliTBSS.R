@@ -19,7 +19,6 @@
 #'@export
 #' @examples
 #' ## Unconditional Bernoulli TBSS examples
-#' library(dplyr)
 #' library(TBSS)
 #'
 #' # load tree 
@@ -48,7 +47,6 @@
 #'
 #' ## Bernoulli TBSS stratified (e.g., for matched data with variable matching ratio) 
 #'
-#' library(dplyr)
 #' library(TBSS)
 #'
 #' # load tree 
@@ -86,14 +84,8 @@ if(min_events < 2) stop("min_events should be a number greater than 2.")
   names(case) = c("leaf", "case","p")
   names(control) = c("leaf", "control","p")
 data =  case |> dplyr::full_join(control, by = c('leaf','p')) |> select('leaf', 'case', 'control','p') |>as.data.frame() 
-## check if there are ps that are Nas
- # data$p.x[is.na(data$p.x)] = data$p.y[is.na(data$p.x)]
- #data$p.y[is.na(data$p.y)] = data$p.x[is.na(data$p.y)]
-  ## NAs are 0s.
 
   data = data |> dplyr::mutate_at(2:3,\(x) coalesce(x,0L))
-  # data |> dplyr::select(-p.y)
-  # names(data)[which(names(data) =='p.x')] = 'p'
  } 
  else stop(sprintf("invalid type %s \n", type))
 
