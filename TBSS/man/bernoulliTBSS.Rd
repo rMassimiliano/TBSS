@@ -49,7 +49,6 @@ In TBSS, analyzing matched data with a variable matching ratio requires specifyi
 }
 \examples{
 ## Unconditional Bernoulli TBSS examples
-library(dplyr)
 library(TBSS)
 
 # load tree 
@@ -78,7 +77,6 @@ summary(mod_tbss) |> filter(pvalue <=0.05)
 
 ## Bernoulli TBSS stratified (e.g., for matched data with variable matching ratio) 
 
-library(dplyr)
 library(TBSS)
 
 # load tree 

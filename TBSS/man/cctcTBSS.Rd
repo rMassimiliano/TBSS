@@ -16,17 +16,17 @@ cctcTBSS(
 )
 }
 \arguments{
-\item{`case`:}{a matrix or data.frame with three columns (leavesID, cases in the reference window, cases in the hazard window)}
+\item{case}{: a matrix or data.frame with three columns (leavesID, cases in the reference window, cases in the hazard window)}
 
-\item{`control`:}{a matrix or data.frame with three columns (leavesID, cases in the reference window, cases in the hazard window)}
+\item{control}{: a matrix or data.frame with three columns (leavesID, cases in the reference window, cases in the hazard window)}
 
-\item{`tree`:}{a matrix or data.frame with two columns (nodeID, parantNodeID)}
+\item{tree}{: a matrix or data.frame with two columns (nodeID, parantNodeID)}
 
-\item{`B`}{number of bootstrap replicates. Default is `999`.}
+\item{B}{number of bootstrap replicates. Default is `999`.}
 
-\item{`parallel`}{if TRUE parallel computing is used to compute the bootstrap p-values.}
+\item{parallel}{if TRUE parallel computing is used to compute the bootstrap p-values.}
 
-\item{`ncpus`}{number of cpus used if `parallel = TRUE`. If no value is provided set to  `detectCores() - 1`.}
+\item{ncpus}{number of cpus used if `parallel = TRUE`. If no value is provided set to  `detectCores() - 1`.}
 }
 \description{
 This function implement TreeScan for a case-case-time control design

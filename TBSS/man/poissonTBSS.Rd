@@ -43,14 +43,13 @@ This function implements unconditional and conditional Poisson TBSS analysis.
 }
 \examples{
 ## Unconditional Poisson TBSS examples
-library(dplyr)
 library(TBSS)
 
 # load tree 
 data("tree_example", package = 'TBSS')
 
 # load data
-data("poisson_TBSS_examples", package = 'TBSS')
+data("poisson_TBSS_example", package = 'TBSS')
 
 dat = poisson_TBSS_example
 head(dat)

@@ -7,11 +7,11 @@
 getLeaf(node, tree, leafs)
 }
 \arguments{
-\item{`node`}{a character vector with the id of a node}
+\item{node}{a character vector with the id of a node}
 
-\item{`tree`:}{a data.frame with two columns. The first column is the id of each node of a tree while the second is its direct ancestor. Root node as no ancestor that is represented with "".}
+\item{tree}{: a data.frame with two columns. The first column is the id of each node of a tree while the second is its direct ancestor. Root node as no ancestor that is represented with "".}
 
-\item{`leafs`:}{a list of the terminal nodes, i.e. the leaves}
+\item{leafs}{:  a list of the terminal nodes, i.e. the leaves}
 }
 \description{
 Internal function that list the leveas connected to a node

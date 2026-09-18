@@ -40,7 +40,6 @@ This function implements a survival TBSS model that assume exponentially distrib
 }
 \examples{
 ## Unconditional Poisson TBSS examples
-library(dplyr)
 library(TBSS)
 
 # load tree 
@@ -52,7 +51,7 @@ head(dat)
 
 
 
-mod_tbss = poissonSurvivalTBSS(data = dat, tree = tree_example)
+mod_tbss = poissonSurvivalTBSS(data = dat, tree = tree_example, direction = 'all')
 # inspect potential signals
 summary(mod_tbss) |> filter(pvalue <=0.05)
 }

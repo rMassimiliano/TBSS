@@ -19,7 +19,7 @@
 #' data("tree_example", package = 'TBSS')
 #'
 #' # load data
-#' data("poisson_TBSS_examples", package = 'TBSS')
+#' data("poisson_TBSS_example", package = 'TBSS')
 #'
 #' dat = poisson_TBSS_example
 #' head(dat)
