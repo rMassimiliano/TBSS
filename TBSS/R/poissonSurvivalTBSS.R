@@ -17,7 +17,9 @@
 #' data("tree_example", package = 'TBSS')
 #' # load data
 #' data("survival_poisson_example", package = 'TBSS')
-#' dat =  survival_poisson_example |> dplyr::select(leaf, events_case, total_person_time_case, events_control, total_person_time_control)
+#' dat =  survival_poisson_example |> 
+#'	  dplyr::select(leaf, events_case, total_person_time_case,
+#'                      events_control, total_person_time_control)
 #' head(dat)
 #'
 #'
@@ -27,7 +29,8 @@
 #' summary(mod_tbss) |> dplyr::filter(pvalue <=0.05)
 
 #'@export
-poissonSurvivalTBSS =  function(data,tree, min_events = 1, B = 999, parallel = FALSE, ncpus = NULL, direction = 'positive', nodeToRemove = NULL, seed  = 8277)
+poissonSurvivalTBSS =  function(data,tree, min_events = 1, B = 999, parallel = FALSE, ncpus = NULL,
+				direction = 'positive', nodeToRemove = NULL, seed  = 8277)
 {
  set.seed(seed)
  ## stop if the parameter min_events is smaller than 1 or negative 
@@ -39,11 +42,11 @@ poissonSurvivalTBSS =  function(data,tree, min_events = 1, B = 999, parallel = F
  tree = as.data.frame(tree)
  if(parallel & (length(ncpus) == 0))
  {
-  ncpus = detectCores() - 1
+  ncpus = parallel::detectCores() - 1
  }
 
  ## Create appropriate TS object
-   myTS = new("poissonSurvivalTS", tree = as.data.frame(tree), data = as.data.frame(data), B = B)
+   myTS = methods::new("poissonSurvivalTS", tree = as.data.frame(tree), data = as.data.frame(data), B = B)
 
   ## TBSS analysis
   myTS = mapNodesLeaves(myTS)

@@ -3,7 +3,9 @@
 ### Unconditional case case time control Tree Scan
 #############################################
 #############################################
-setClass(Class = "unconditionalCaseCaseTimeControlTS", slots = c(p = 'numeric'), contains = 'TS')
+#' @importFrom rlang .data
+
+
 
 setMethod("computeSS", signature(object = "unconditionalCaseCaseTimeControlTS"), function(object)
 {
@@ -62,8 +64,8 @@ function (object)
  n_case = object@nodeSS$case_reference[indx] + object@nodeSS$case_hazard[indx]
   p_null = (object@nodeSS$control_hazard[indx])/(object@nodeSS$control_reference[indx] + object@nodeSS$control_hazard[indx])
 
-   c_case = rbinom(length(indx),n_case, prob = p_null) 	 
-   c_control = rbinom(length(indx),n_control, prob = p_null) 	 
+   c_case = stats::rbinom(length(indx),n_case, prob = p_null) 	 
+   c_control = stats::rbinom(length(indx),n_control, prob = p_null) 	 
 
    object@nodeSS$control_reference[indx] = n_control - c_control
    object@nodeSS$control_hazard[indx]    = c_control
@@ -87,7 +89,10 @@ function (object)
 }
 )
 
-
+#'  Summary method
+#' @description provide a  summary of the results of and unconditional  Case Case Time Control analysis.
+#' @param object an object of class TS
+#' @rdname unconditionalCaseCaseTimeControlTS
 setMethod(f = "summary",
           signature = "unconditionalCaseCaseTimeControlTS",
           definition = function(object){
@@ -104,7 +109,7 @@ setMethod(f = "summary",
 	  suppressMessages({
 	retval =   retval |>
 	            dplyr::full_join(object@nodeSS) |>
-	            dplyr::select(node, case_reference, control_reference, case_hazard, control_hazard,LRT,pvalue) })
+	            dplyr::select(.data$node, .data$case_reference, .data$control_reference, .data$case_hazard, .data$control_hazard,.data$LRT,.data$pvalue) })
 	  return(retval)
 	  })
 

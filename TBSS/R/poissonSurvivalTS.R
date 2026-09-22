@@ -38,7 +38,7 @@ setMethod("computeLRT", signature(object = "poissonSurvivalTS"), function(object
    j = which(object@nodeSS$node == object@nodesToTest[r])
    y = c(object@nodeSS$events_case[j], object@nodeSS$events_control[j])
    o = c(object@nodeSS$total_person_time_case[j],  object@nodeSS$total_person_time_control[j])
-   LRT[r] = 2*(sum(dpois(y,y, log = T)) - sum( dpois(y, sum(y)/sum(o) *o, log = T)))
+   LRT[r] = 2*(sum(stats::dpois(y,y, log = T)) - sum( stats::dpois(y, sum(y)/sum(o) *o, log = T)))
   }
    object@LRT = LRT
    names(object@LRT) = object@nodesToTest
@@ -66,11 +66,11 @@ function (object)
      ## cases 
      ##----------
 
-       r_case   =   with(object@nodeSS, rpois(length(indx), lH0*  total_person_time_case[indx]))
+       r_case   =   with(object@nodeSS, stats::rpois(length(indx), lH0*  total_person_time_case[indx]))
        object@nodeSS$events_case[indx]  = r_case
      ## controls
      ##----------
-       r_control   =   with(object@nodeSS, rpois(length(indx), lH0 * total_person_time_control[indx]))
+       r_control   =   with(object@nodeSS, stats::rpois(length(indx), lH0 * total_person_time_control[indx]))
        object@nodeSS$events_control[indx]  = r_control
 
   

@@ -2,10 +2,19 @@
 % Please edit documentation in R/uncon_bernoulli_llrt.R
 \name{uncon_bernoulli_llrt}
 \alias{uncon_bernoulli_llrt}
-\title{compute the log-likelihood ratio test for unconditional binomial analysis}
+\title{log-likelihood ratio for binomial distribution 
+compute the log-likelihood ratio test statistic for unconditional binomial analysis}
 \usage{
 uncon_bernoulli_llrt(case, control, p)
 }
+\arguments{
+\item{case}{number of case (successes)}
+
+\item{control}{number of control (failures)}
+
+\item{p}{theoretical probability of the binomial}
+}
 \description{
-compute the log-likelihood ratio test for unconditional binomial analysis
+log-likelihood ratio for binomial distribution 
+compute the log-likelihood ratio test statistic for unconditional binomial analysis
 }

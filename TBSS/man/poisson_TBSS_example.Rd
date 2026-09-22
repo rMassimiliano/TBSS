@@ -3,26 +3,22 @@
 \docType{data}
 \name{poisson_TBSS_example}
 \alias{poisson_TBSS_example}
-\title{Example dataset for Poisson TBSS
-The format of the data is a dataframe with 13 rows and 3 columns
+\title{Example dataset for Poisson TBSS}
+\format{
+A data frame with 13 rows and 3 columns
     \describe{
       \item{leaf}{Unique identifier for the leaf, character}
       \item{observed}{number of observed cases, integer}
-      \item{control}{number of expected cases (appropriately scaled), numeric}
-    }}
-\format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 13 rows and 3 columns.
+      \item{expected}{number of expected cases (appropriately scaled), numeric}
+    }
+}
+\source{
+Simulated dataset.
 }
 \usage{
 data(poisson_TBSS_example)
 }
 \description{
 Example dataset for Poisson TBSS
-The format of the data is a dataframe with 13 rows and 3 columns
-    \describe{
-      \item{leaf}{Unique identifier for the leaf, character}
-      \item{observed}{number of observed cases, integer}
-      \item{control}{number of expected cases (appropriately scaled), numeric}
-    }
 }
 \keyword{datasets}

@@ -10,6 +10,7 @@
 #' The \code{personTime} includes the total person time, in days, for the exposed and comparator groups.
 #'The person time is weighted using the weight provided in the cohort file. In case an event happens the same day as the index date, we assume that the event after 1/2 a day. 
 #'Patients excluded from the washout procedure are "censored" rather than excluded from the analysis, hence their person time counts. For "censored" patients we consider as person time the length of the follow-up. 
+#' @importFrom rlang .data
 applyNodeSpecificWashout = function(object,washData, inputData)
 {
  retval = list()
@@ -75,7 +76,7 @@ for(r in 1:length(object@mapNodesLeaves))
 
 
 
-   ptime = dplyr::left_join(fups2, object@cohort |> dplyr::filter(patientID %in% fups2$patientID) |> dplyr::select(patientID, exposure,weight),  by = 'patientID')
+   ptime = dplyr::left_join(fups2, object@cohort |> dplyr::filter(.data$patientID %in% fups2$patientID) |> dplyr::select(.data$patientID, .data$exposure,.data$weight),  by = 'patientID')
 
    ptime$wft = with(ptime,weight * followup)
 

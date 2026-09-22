@@ -3,42 +3,30 @@
 \docType{data}
 \name{survival_poisson_example}
 \alias{survival_poisson_example}
-\title{Example dataset for Poisson (exponential) and robust survival TBSS
-The format of the data is a dataframe with 13 rows and 11 columns
+\title{Example dataset for Poisson (exponential) and robust survival TBSS}
+\format{
+The format of the data is a data frame with 13 rows and 11 columns
     \describe{
       \item{leaf}{Unique identifier for the leaf, character}
- \item{sample_size_case}{number of individual for the cases, numeric}
+ \item{sample_size_case}{number of individuals for the cases, numeric}
  \item{events_case}{number of events for cases, numeric}
  \item{total_person_time_case}{total person time for the cases, numeric}
  \item{total_person_time_SOS_case}{sum of squares of the total person time for the cases, numeric}
  \item{uncensored_person_time_case}{total person time among the uncensored individuals for the cases, numeric}
- \item{sample_size_control }{number of individual for the controls, numeric}
- \item{events_control}{number of events for cases, numeric}
+ \item{sample_size_control}{number of individual for the controls, numeric}
+ \item{events_control}{number of events for control, numeric}
  \item{total_person_time_control}{total person time for the controls, numeric}
  \item{total_person_time_SOS_control}{sum of squares of the total person time for the controls, numeric}
  \item{uncensored_person_time_control}{total person time among the uncensored individuals for the controls, numeric}
-    }}
-\format{
-An object of class \code{grouped_df} (inherits from \code{tbl_df}, \code{tbl}, \code{data.frame}) with 13 rows and 11 columns.
+    }
+}
+\source{
+Simulated dataset.
 }
 \usage{
 data(survival_poisson_example)
 }
 \description{
 Example dataset for Poisson (exponential) and robust survival TBSS
-The format of the data is a dataframe with 13 rows and 11 columns
-    \describe{
-      \item{leaf}{Unique identifier for the leaf, character}
- \item{sample_size_case}{number of individual for the cases, numeric}
- \item{events_case}{number of events for cases, numeric}
- \item{total_person_time_case}{total person time for the cases, numeric}
- \item{total_person_time_SOS_case}{sum of squares of the total person time for the cases, numeric}
- \item{uncensored_person_time_case}{total person time among the uncensored individuals for the cases, numeric}
- \item{sample_size_control }{number of individual for the controls, numeric}
- \item{events_control}{number of events for cases, numeric}
- \item{total_person_time_control}{total person time for the controls, numeric}
- \item{total_person_time_SOS_control}{sum of squares of the total person time for the controls, numeric}
- \item{uncensored_person_time_control}{total person time among the uncensored individuals for the controls, numeric}
-    }
 }
 \keyword{datasets}

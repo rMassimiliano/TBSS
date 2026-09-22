@@ -90,7 +90,8 @@ head(data_treated)
 data_untreated = bernoulli_TBSS_examples$variable_matching_ratio$control
 head(data_untreated)
 
-mod_tbss = bernoulliTBSS(case = data_treated, control = data_untreated, tree = tree_example, type ='variableMR')
+mod_tbss = bernoulliTBSS(case = data_treated, control = data_untreated,
+		    tree = tree_example, type ='variableMR')
 
 # inspect potential signals
 summary(mod_tbss) |> dplyr::filter(pvalue <=0.05)

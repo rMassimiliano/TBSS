@@ -4,7 +4,7 @@
 \name{bernoulli_TBSS_examples}
 \alias{bernoulli_TBSS_examples}
 \title{Example dataset for Bernoulli TBSS
-The file is a list with two elements. Each elements contains the case and control file for implementation of a Bernoulli TBSS. The first element of the list correspond to the standard Bernoulli TBSS while the second consider variable matching ratio.}
+A list with two elements. Each element contains the case and control file for implementation of a Bernoulli TBSS. The first element of the list corresponds to the standard Bernoulli TBSS while the second consider variable matching ratio.}
 \format{
 A named list containing two data frames:
 \describe{
@@ -17,7 +17,7 @@ A named list containing two data frames:
     }
   }
   \item{variable_matching_ratio}{
-Two dataframes with 37 rows and 3 columns 
+Two data frames with 37 rows and 3 columns 
     \describe{
       \item{leaf}{Unique identifier for the leaf, character}
       \item{case}{number of cases, integer}
@@ -27,11 +27,14 @@ Two dataframes with 37 rows and 3 columns
   }
 }
 }
+\source{
+Simulated dataset.
+}
 \usage{
 data(bernoulli_TBSS_examples)
 }
 \description{
 Example dataset for Bernoulli TBSS
-The file is a list with two elements. Each elements contains the case and control file for implementation of a Bernoulli TBSS. The first element of the list correspond to the standard Bernoulli TBSS while the second consider variable matching ratio.
+A list with two elements. Each element contains the case and control file for implementation of a Bernoulli TBSS. The first element of the list corresponds to the standard Bernoulli TBSS while the second consider variable matching ratio.
 }
 \keyword{datasets}

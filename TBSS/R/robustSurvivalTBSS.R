@@ -38,11 +38,11 @@ robustSurvivalTBSS =  function(data,tree, min_events = 1, B = 999, parallel = FA
  tree = as.data.frame(tree)
  if(parallel & (length(ncpus) == 0))
  {
-  ncpus = detectCores() - 1
+  ncpus = parallel::detectCores() - 1
  }
 
  ## Create appropriate TS object
-   myTS = new("robustSurvivalTS", tree = as.data.frame(tree), data = as.data.frame(data), B = B)
+   myTS = methods::new("robustSurvivalTS", tree = as.data.frame(tree), data = as.data.frame(data), B = B)
 
   ## TBSS analysis
   myTS = mapNodesLeaves(myTS)

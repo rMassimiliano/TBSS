@@ -1,4 +1,9 @@
-#' compute the log-likelihood ratio test for unconditional binomial analysis 
+
+#' log-likelihood ratio for binomial distribution 
+#' compute the log-likelihood ratio test statistic for unconditional binomial analysis 
+#' @param case number of case (successes)
+#' @param control number of control (failures)
+#' @param p theoretical probability of the binomial
 uncon_bernoulli_llrt =function (case,control, p)
 {
   res =  if(case/(case + control) > p & (control >0))
@@ -11,7 +16,12 @@ uncon_bernoulli_llrt =function (case,control, p)
 
 
 
-#' same function but vectorized. 
+
+#' log-likelihood ratio for binomial distribution 
+#' compute the log-likelihood ratio test statistic for unconditional binomial analysis (vectorized)
+#' @param case number of case (successes)
+#' @param control number of control (failures)
+#' @param p theoretical probability of the binomial
 uncon_bernoulli_llrt_vectorized =function (case,control, p)
 {
    res = rep(0,length(case))

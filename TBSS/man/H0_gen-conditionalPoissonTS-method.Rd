@@ -6,6 +6,9 @@
 \usage{
 \S4method{H0_gen}{conditionalPoissonTS}(object)
 }
+\arguments{
+\item{object}{an object of class TS}
+}
 \description{
 generate a new tree under the global null H0
 }

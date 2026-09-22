@@ -61,18 +61,18 @@ if(!(direction %in% c("positive","all","negative"))) stop("direction should be '
  tree = as.data.frame(tree)
  if(parallel & (length(ncpus) == 0))
  {
-  ncpus = detectCores() - 1
+  ncpus = parallel::detectCores() - 1
  }
 
  ## Create appropriate TS object
  if(type == 'unconditional')
  {
-   myTS = new("unconditionalPoissonTS", tree = as.data.frame(tree), data = as.data.frame(data), B = B)
+   myTS = methods::new("unconditionalPoissonTS", tree = as.data.frame(tree), data = as.data.frame(data), B = B)
  }
  else if(type == 'conditional')
  {
 
-   myTS = new("conditionalPoissonTS", tree = as.data.frame(tree), data = as.data.frame(data), B = B)
+   myTS = methods::new("conditionalPoissonTS", tree = as.data.frame(tree), data = as.data.frame(data), B = B)
  }
 
   ## TBSS analysis

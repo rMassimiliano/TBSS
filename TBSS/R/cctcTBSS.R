@@ -5,6 +5,8 @@
 #' @param `B` number of bootstrap replicates. Default is `999`.
 #' @param `parallel` if TRUE parallel computing is used to compute the bootstrap p-values.
 #' @param `ncpus` number of cpus used if `parallel = TRUE`. If no value is provided set to  `detectCores() - 1`.
+#'@param nodeToRemove a character vector with user-specified nodes to be removed from the analysis.  Note that sufficient statistics for these nodes are computed, but they are excluded from the testing procedure. By removing nodes from the list of tests, power can increase because of the decreased number of hypotheses that are tested. This list should be specified before running the analysis.  
+#'@param seed a number indicating the seed used for the analysis, i.e., the input of \code{set.seed()}. Default \code{seed  = 8277}.
 
 #' @export
 cctcTBSS =  function(case,control,tree,B = 999, parallel = FALSE, ncpus = NULL, nodeToRemove = NULL, seed  = 8277)
@@ -17,11 +19,11 @@ cctcTBSS =  function(case,control,tree,B = 999, parallel = FALSE, ncpus = NULL, 
  tree = as.data.frame(tree)
  if(parallel & (length(ncpus) == 0))
  {
-  ncpus = detectCores() - 1
+  ncpus = parallel::detectCores() - 1
  }
 
  ## create appropriate TS object
-  myTS = new("unconditionalCaseCaseTimeControlTS", data =data, tree = tree, B =B )
+  myTS = methods::new("unconditionalCaseCaseTimeControlTS", data =data, tree = tree, B =B )
   myTS = mapNodesLeaves(myTS)
   myTS = computeSS(myTS)
   myTS = computeLRT(myTS)

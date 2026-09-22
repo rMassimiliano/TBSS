@@ -4,6 +4,10 @@
 #############################################
 #############################################
 
+#' Sufficient Statistics
+#' Compute sufficient statistics for unconditionalBernoulliTS
+#' @param object an object of class TS
+#' @rdname unconditionalBernoulliTS
 
 setMethod("computeSS", signature(object = "unconditionalBernoulliTS"), function(object)
 {
@@ -23,6 +27,10 @@ setMethod("computeSS", signature(object = "unconditionalBernoulliTS"), function(
 }
 )
 
+#' log-likelihood ratio statistics 
+#' Compute The log-likelihood ratio statistics for unconditionalBernoulliTS
+#' @param object an object of class TS
+#' @rdname unconditionalBernoulliTS
 setMethod("computeLRT", signature(object = "unconditionalBernoulliTS"), function(object) {
   if(length(object@mapNodesLeaves) == 0) object = mapNodesLeaves(object)
   if(length(object@nodeSS) == 0) object = computeSS(object)
@@ -42,6 +50,8 @@ setMethod("computeLRT", signature(object = "unconditionalBernoulliTS"), function
 
 
 #' generate a new tree under the global null H0
+#' @param object an object of class TS
+#' @rdname unconditionalBernoulliTS
 setMethod("H0_gen", signature(object = "unconditionalBernoulliTS"),
 function(object)
 {
@@ -53,7 +63,7 @@ function(object)
      ## update leaves
      indx = which(object@nodeSS$node %in% leaves_list)
      totals = object@nodeSS$case[indx] + object@nodeSS$control[indx] 
-     cases  = rbinom(length(indx), size = totals, prob = object@p)
+     cases  = stats::rbinom(length(indx), size = totals, prob = object@p)
      object@nodeSS$case[indx] = cases
      object@nodeSS$control[indx] = totals - cases
 
@@ -72,8 +82,11 @@ function(object)
 
 
 
-
-
+#'  Summary method
+#' @description provide a  summary of the results of and unconditional Bernoulli TBSS analysis. 
+#' @param object an object of class TS
+#' @rdname unconditionalBernoulliTS
+#' @importFrom rlang .data
 setMethod(f = "summary",
           signature = "unconditionalBernoulliTS",
           definition = function(object){
@@ -89,11 +102,11 @@ setMethod(f = "summary",
           suppressMessages({
 		  retval = retval |> dplyr::full_join(object@nodeSS);
                   retval = retval |>
-	           dplyr::mutate(expected = (control +case)*object@p) |>
-		   dplyr::mutate(relativeRisk =  case/expected, excessCases = case - expected) |>
-		   dplyr::select(node,case,control, expected, relativeRisk, excessCases, LRT,pvalue);
+	           dplyr::mutate(expected = (.data$control + .data$case)*object@p) |>
+		   dplyr::mutate(relativeRisk =  .data$case/.data$expected, excessCases = .data$case - .data$expected) |>
+		   dplyr::select(.data$node,.data$case, .data$control, .data$expected, .data$relativeRisk, .data$excessCases, .data$LRT,.data$pvalue);
 		  retval = retval |> 
-			  dplyr::arrange(pvalue);
+			  dplyr::arrange(.data$pvalue);
 		  rownames(retval) = NULL;
 	          })
 

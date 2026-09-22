@@ -2,11 +2,15 @@
 #############################################
 ### Unconditional Bernoulli Tree Scan
 #############################################
-#############################################
+########## ###################################
+#' @importFrom rlang .data
 setClass(Class = "unconditionalBernoulliTSVariableRR", contains = 'unconditionalBernoulliTS')
 
 
-
+#' Sufficient Statistics
+#' Compute sufficient statistics for unconditionalBernoulliTSVariableRR
+#' @param object an object of class TS
+#' @rdname unconditionalBernoulliTS
 setMethod("computeSS", signature(object = "unconditionalBernoulliTSVariableRR"), function(object)
 {
   object@nodeSS = data.frame(node = names(object@mapNodesLeaves), case = 0L, control = 0L)
@@ -29,6 +33,11 @@ setMethod("computeSS", signature(object = "unconditionalBernoulliTSVariableRR"),
 )
 
 
+
+#' log-likelihood ratio statistics 
+#' Compute The log-likelihood ratio statistics for unconditionalBernoulliTSVariableRR
+#' @param object an object of class TS
+#' @rdname unconditionalBernoulliTS
 setMethod("computeLRT", signature(object = "unconditionalBernoulliTSVariableRR"), function(object) {
   if(length(object@mapNodesLeaves) == 0) object = mapNodesLeaves(object)
   if(length(object@nodeSS) == 0) object = computeSS(object)
@@ -52,6 +61,8 @@ setMethod("computeLRT", signature(object = "unconditionalBernoulliTSVariableRR")
  })
 
 #' generate data under the null
+#' @param object an object of class TS
+#' @rdname unconditionalBernoulliTS
 setMethod("H0_gen", signature(object = "unconditionalBernoulliTSVariableRR"),
   function (object)
   {
@@ -62,7 +73,7 @@ setMethod("H0_gen", signature(object = "unconditionalBernoulliTSVariableRR"),
      ## generate leafs value from the data
       totals  = object@data$case + object@data$control
       probs   = object@data$p
-      cases   = rbinom(length(totals), size = totals, prob = probs)
+      cases   = stats::rbinom(length(totals), size = totals, prob = probs)
       controls = totals - cases
       object@data$case    = cases
       object@data$control = controls
@@ -83,6 +94,10 @@ setMethod("H0_gen", signature(object = "unconditionalBernoulliTSVariableRR"),
 
 
 
+#'  Summary method
+#' @description provide a  summary of the results of and unconditional Bernoulli TBSS analysis with variable matching ratio.   
+#' @param object an object of class TS
+#' @rdname unconditionalBernoulliTS
 
 setMethod(f = "summary",
           signature = "unconditionalBernoulliTSVariableRR",
@@ -90,7 +105,7 @@ setMethod(f = "summary",
 
           ranking = order(object@LRT,decreasing = TRUE)
           boot_maxs = apply(object@LRT_H0,2,max)
-pvalues = sapply(object@LRT[ranking], \(x) (sum(boot_maxs >= x) +1)/(object@B +1))
+	  pvalues = sapply(object@LRT[ranking], \(x) (sum(boot_maxs >= x) +1)/(object@B +1))
 
 	  retval = data.frame(node = names(object@LRT)[ranking],
 		                     LRT = object@LRT[ranking],
@@ -98,8 +113,8 @@ pvalues = sapply(object@LRT[ranking], \(x) (sum(boot_maxs >= x) +1)/(object@B +1
 
           suppressMessages({
 		  retval = retval |> dplyr::full_join(object@nodeSS) |>
-		  dplyr::select(node,case,control,expected,relativeRisk, excessCases,LRT,pvalue);
-		  retval = retval |> dplyr::arrange(pvalue);
+		  dplyr::select(.data$node,.data$case,.data$control,.data$expected,.data$relativeRisk, .data$excessCases,.data$LRT,.data$pvalue);
+		  retval = retval |> dplyr::arrange(.data$pvalue);
 		  rownames(retval) = NULL;
 	          })
 

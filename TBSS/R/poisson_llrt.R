@@ -1,5 +1,21 @@
+#' Poisson  log-likelihood ratio statistic
+#' compute the log-likelihood ratio statistic for the difference in mean of two Poisson distributions
+#' @param observed number of events for the first Poisson
+#' @param expected number of events for the second Poisson
+uncon_poisson_llrt =function (observed,expected)
+{
+ # res =   dpois(observed,observed, log = TRUE) - dpois(observed,expected, log = TRUE)
+   if(observed==0){return(-expected)}
+   res = expected - observed + observed*(log(observed) - log(expected)  )
+   return(res)
+}
 
-#' compute the log-likelihood ratio test for two Poisson with different offsets (person time)
+#' Poisson  log-likelihood ratio statistic
+#' compute the log-likelihood ratio statistic for  for the difference in mean of two Poisson distributions with different offsets (person time)
+#' @param observed number of events for the first Poisson
+#' @param observed_pt  time reference (or person time) for the first Poisson
+#' @param expected number of events for the second Poisson
+#' @param expected_pt time reference (or person time) for the second Poisson
 poisson_llrt =function (observed, observed_pt, expected, expected_pt)
 {
  # res =   dpois(observed,observed, log = TRUE) - dpois(observed,expected, log = TRUE)

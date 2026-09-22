@@ -27,6 +27,10 @@ cctcTBSS(
 \item{parallel}{if TRUE parallel computing is used to compute the bootstrap p-values.}
 
 \item{ncpus}{number of cpus used if `parallel = TRUE`. If no value is provided set to  `detectCores() - 1`.}
+
+\item{nodeToRemove}{a character vector with user-specified nodes to be removed from the analysis.  Note that sufficient statistics for these nodes are computed, but they are excluded from the testing procedure. By removing nodes from the list of tests, power can increase because of the decreased number of hypotheses that are tested. This list should be specified before running the analysis.}
+
+\item{seed}{a number indicating the seed used for the analysis, i.e., the input of \code{set.seed()}. Default \code{seed  = 8277}.}
 }
 \description{
 This function implement TreeScan for a case-case-time control design

@@ -3,9 +3,13 @@
 ### Unconditional Possion Tree Scan
 #############################################
 #############################################
-setClass(Class = "permutationPoissonTS",  contains = 'TS', slots = c(idInNode = 'list',personTime = 'list',personTimeNotInNode = 'list', cohort = 'data.frame', fup = 'logical')) 
 
 
+
+#' Sufficient Statistics
+#' Compute sufficient statistics for the permutationPoissonTS 
+#' @param object an object of class TS
+#' @rdname permutationPoissonTS
 setMethod("computeSS", signature(object = "permutationPoissonTS"), function(object)
 {
   object@nodeSS = data.frame(node = names(object@mapNodesLeaves), observed = 0L, observed_pt = 1L, expected = 0L, expected_pt = 1L)
@@ -21,9 +25,9 @@ setMethod("computeSS", signature(object = "permutationPoissonTS"), function(obje
     ## combine person time for censored and not in node
     combined_pt = rbind(object@personTime[[r]], object@personTimeNotInNode[[r]])
 
-    object@nodeSS$expected_pt[r] = with(dplyr::filter(object@idInNode[[r]],exposure == 0), sum(weight*followup)) + with(dplyr::filter(combined_pt,exposure == 0), sum(weight*followup)) 
+    object@nodeSS$expected_pt[r] = with(dplyr::filter(object@idInNode[[r]],.data$exposure == 0), sum(weight*followup)) + with(dplyr::filter(combined_pt,.data$exposure == 0), sum(weight*followup)) 
 
-    object@nodeSS$observed_pt[r] =  with(dplyr::filter(object@idInNode[[r]],exposure == 1), sum(weight*followup)) + with(dplyr::filter(combined_pt,exposure == 1), sum(weight*followup)) 
+    object@nodeSS$observed_pt[r] =  with(dplyr::filter(object@idInNode[[r]],.data$exposure == 1), sum(weight*followup)) + with(dplyr::filter(combined_pt,.data$exposure == 1), sum(weight*followup)) 
    }
 
   }
@@ -34,6 +38,10 @@ setMethod("computeSS", signature(object = "permutationPoissonTS"), function(obje
 )
 
 
+#' log-likelihood ratio statistics 
+#' Compute The log-likelihood ratio statistics for permutationPoissonTS
+#' @param object an object of class TS
+#' @rdname permutationPoissonTS
 setMethod("computeLRT", signature(object = "permutationPoissonTS"), function(object) {
   if(length(object@mapNodesLeaves) == 0) object = mapNodesLeaves(object)
   if(length(object@nodeSS) == 0) object = computeSS(object)
@@ -52,13 +60,15 @@ setMethod("computeLRT", signature(object = "permutationPoissonTS"), function(obj
  })
 
 #' generate data under the null via permutation of the lables
+#' @param object an object of class TS
+#' @rdname permutationPoissonTS
 setMethod("H0_gen", signature(object = "permutationPoissonTS"),
 function (object)
 {
     ## generate the leaves data under H0
 
 	## it is ordered by strata
-  permuted_cohort = object@cohort |> dplyr::select(patientID,strata) |>  dplyr::group_by(strata) |> dplyr::slice_sample(prop = 1)
+  permuted_cohort = object@cohort |> dplyr::select(.data$patientID,.data$strata) |>  dplyr::group_by(.data$strata) |> dplyr::slice_sample(prop = 1)
 
  ## cohort is ordered by strata so this change allocation but not structure since the PatientId are permuted withing the strata
  permuted_cohort$exposure = object@cohort$exposure
@@ -93,6 +103,11 @@ function (object)
 )
 	  
 
+#'  Summary method
+#' @description provide a  summary of the TBSS analysis results. Include time and relative measure if follow-up time is used. 
+#' @param object an object of class TS
+#' @rdname permutationPoissonTS
+
 setMethod(f = "summary",
           signature = "permutationPoissonTS",
           definition = function(object){
@@ -111,9 +126,9 @@ setMethod(f = "summary",
 	   suppressMessages({
 	retval =   retval |>
 	           dplyr::full_join(object@nodeSS) |>
-	            dplyr::mutate(relativeRisk = (observed/observed_pt)/(expected/expected_pt), excessCases = observed/observed_pt - expected/expected_pt) |>
-		    dplyr::mutate(observed_rate = observed/observed_pt, expected_rate = expected/expected_pt) |>
-	            dplyr::select(node,observed_rate, expected_rate,relativeRisk, excessCases,LRT,pvalue) 
+	            dplyr::mutate(relativeRisk = (.data$observed/.data$observed_pt)/(.data$expected/.data$expected_pt), excessCases = .data$observed/.data$observed_pt - .data$expected/.data$expected_pt) |>
+		    dplyr::mutate(observed_rate = .data$observed/.data$observed_pt, expected_rate = .data$expected/.data$expected_pt) |>
+	            dplyr::select(.data$node,.data$observed_rate, .data$expected_rate, .data$relativeRisk, .data$excessCases,.data$LRT,.data$pvalue) 
 	  })
 	  }
 	  else
@@ -121,8 +136,8 @@ setMethod(f = "summary",
 	   suppressMessages({
 	    retval =   retval |>
 	            dplyr::full_join(object@nodeSS) |>
-	            dplyr::mutate(relativeRisk = observed/expected, excessCases = observed - expected) |>
-	            dplyr::select(node,observed,expected,relativeRisk, excessCases,LRT,pvalue) 
+	            dplyr::mutate(relativeRisk = .data$observed/.data$expected, excessCases = .data$observed - .data$expected) |>
+	            dplyr::select(.data$node,.data$observed,.data$expected,.data$relativeRisk, .data$excessCases,.data$LRT,.data$pvalue) 
 	  })
 	  }
 	  return(retval)

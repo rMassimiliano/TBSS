@@ -46,7 +46,9 @@ library(TBSS)
 data("tree_example", package = 'TBSS')
 # load data
 data("survival_poisson_example", package = 'TBSS')
-dat =  survival_poisson_example |> dplyr::select(leaf, events_case, total_person_time_case, events_control, total_person_time_control)
+dat =  survival_poisson_example |> 
+  dplyr::select(leaf, events_case, total_person_time_case,
+                     events_control, total_person_time_control)
 head(dat)
 
 

@@ -3,9 +3,14 @@
 ### Unconditional Possion Tree Scan
 #############################################
 #############################################
+#' @importFrom rlang .data
 setClass(Class = "unconditionalPoissonTS",  contains = 'TS')
 
 
+#' Sufficient Statistics
+#' Compute sufficient statistics for the unconditionalPoissonTS
+#' @param object an object of class TS
+#' @rdname unconditionalPoissonTS 
 setMethod("computeSS", signature(object = "unconditionalPoissonTS"), function(object)
 {
   object@nodeSS = data.frame(node = names(object@mapNodesLeaves), observed = 0L, expected = 0L)
@@ -24,6 +29,10 @@ setMethod("computeSS", signature(object = "unconditionalPoissonTS"), function(ob
 )
 
 
+#' log-likelihood ratio statistics 
+#' Compute The log-likelihood ratio statistics for unconditionalPoissonTS 
+#' @param object an object of class TS
+#' @rdname unconditionalPoissonTS 
 setMethod("computeLRT", signature(object = "unconditionalPoissonTS"), function(object) {
   if(length(object@mapNodesLeaves) == 0) object = mapNodesLeaves(object)
   if(length(object@nodeSS) == 0) object = computeSS(object)
@@ -42,6 +51,8 @@ setMethod("computeLRT", signature(object = "unconditionalPoissonTS"), function(o
  })
 
 #' generate data under the null
+#' @param object an object of class TS
+#' @rdname unconditionalPoissonTS 
 setMethod("H0_gen", signature(object = "unconditionalPoissonTS"),
 function (object)
 {
@@ -50,7 +61,7 @@ function (object)
      leaves_list = object@leaves   
 
      indx = which(object@nodeSS$node %in% leaves_list)
-     object@nodeSS$observed[indx] = rpois(length(indx), object@nodeSS$expected[indx])
+     object@nodeSS$observed[indx] = stats::rpois(length(indx), object@nodeSS$expected[indx])
   
      ## update only the SS for the nodes that are used in the LRT
      ind_set = which(!(object@nodeSS$node%in% leaves_list))
@@ -66,6 +77,10 @@ function (object)
 )
 	  
 
+#'  Summary method
+#' @description provide a  summary of the results of and unconditional Poisson TBSS analysis. 
+#' @param object an object of class TS
+#' @rdname unconditionalPoissonTS 
 setMethod(f = "summary",
           signature = "unconditionalPoissonTS",
           definition = function(object){
@@ -82,15 +97,19 @@ setMethod(f = "summary",
 	  suppressMessages({
 	retval =   retval |>
 	            dplyr::full_join(object@nodeSS) |>
-	            dplyr::mutate(relativeRisk = observed/expected, excessCases = observed - expected) |>
-	            dplyr::select(node,observed,expected,relativeRisk, excessCases,LRT,pvalue) 
+	            dplyr::mutate(relativeRisk = .data$observed/.data$expected, excessCases = .data$observed - .data$expected) |>
+	            dplyr::select(.data$node,.data$observed,.data$expected,.data$relativeRisk, .data$excessCases,.data$LRT,.data$pvalue) 
 	  })
 	  return(retval)
 	  })
 
 
 
-
+#' generate under a specific alternative model
+#' @param object an object of class TS
+#' @param alternativeParameter mean parameter(s) used for leaves under the alternative
+#' @param alternativeLeaves leaves under the alternative model
+#' @rdname unconditionalPoissonTS 
 setMethod("H1_gen", signature(object = "unconditionalPoissonTS"),
   function (object, alternativeParameter, alternativeLeaves)
   {
@@ -101,11 +120,11 @@ setMethod("H1_gen", signature(object = "unconditionalPoissonTS"),
 
      ## Null leaves
      indx = which(object@nodeSS$node %in% leaves_list)
-     object@nodeSS$observed[indx] = rpois(length(indx), object@nodeSS$expected[indx])
+     object@nodeSS$observed[indx] = stats::rpois(length(indx), object@nodeSS$expected[indx])
 
      ## Alternative leaves
      indx = which(object@nodeSS$node %in% alternativeLeaves)
-     object@nodeSS$observed[indx] = rpois(length(indx), object@nodeSS$expected[indx]*alternativeParameter)
+     object@nodeSS$observed[indx] = stats::rpois(length(indx), object@nodeSS$expected[indx]*alternativeParameter)
   
      ## update only the SS for the nodes that are used in the LRT
      ind_set = which(!(object@nodeSS$node%in% leaves_list))

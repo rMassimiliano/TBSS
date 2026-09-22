@@ -60,12 +60,14 @@
 #'data_untreated = bernoulli_TBSS_examples$variable_matching_ratio$control
 #'head(data_untreated)
 #'
-#' mod_tbss = bernoulliTBSS(case = data_treated, control = data_untreated, tree = tree_example, type ='variableMR')
+#' mod_tbss = bernoulliTBSS(case = data_treated, control = data_untreated,
+#'			    tree = tree_example, type ='variableMR')
 #'
 #' # inspect potential signals
 #' summary(mod_tbss) |> dplyr::filter(pvalue <=0.05)
 
-bernoulliTBSS =  function(case,control,tree, p = 1/2, min_events = 2, B = 999, parallel = FALSE, ncpus = NULL, type ='unconditional', nodeToRemove = NULL, seed  = 8277)
+bernoulliTBSS =  function(case,control,tree, p = 1/2, min_events = 2, B = 999, parallel = FALSE,
+			  ncpus = NULL, type ='unconditional', nodeToRemove = NULL, seed  = 8277)
 {
 set.seed(seed)
 ## stop if the parameter min_events is smaller than 2 or negative 
@@ -92,13 +94,13 @@ data =  case |> dplyr::full_join(control, by = c('leaf','p')) |> dplyr::select('
  tree = as.data.frame(tree)
  if(parallel & (length(ncpus) == 0))
  {
-  ncpus = detectCores() - 1
+  ncpus = parallel::detectCores() - 1
  }
 
  ## create appropriate TS object
  if(type == 'unconditional')
  {
-  myTS = new("unconditionalBernoulliTS", data =data, tree = tree, B = B, p = p)
+  myTS = methods::new("unconditionalBernoulliTS", data =data, tree = tree, B = B, p = p)
  }
  else if(type == 'conditional')
  {
@@ -106,7 +108,7 @@ data =  case |> dplyr::full_join(control, by = c('leaf','p')) |> dplyr::select('
  }
  else if(type == 'variableMR')
  {
-  myTS = new("unconditionalBernoulliTSVariableRR", data =data, tree = tree, B = B)
+  myTS = methods::new("unconditionalBernoulliTSVariableRR", data =data, tree = tree, B = B)
  }
 
   ## TBSS analysis

@@ -30,7 +30,7 @@ if(min_events < 2) stop("min_events should be a number greater than 2.")
 
  if(parallel & (length(ncpus) == 0))
  {
-  ncpus = detectCores() - 1
+  ncpus = parallel::detectCores() - 1
  }
 
 ## names data appropriately - assuming correct order of the columns
@@ -103,7 +103,7 @@ washData = diagnosis_table[ind_wash ,]
 ########################
 if(!relative){fup = FALSE}
 
-myTS = new("permutationPoissonTS", tree = tree, data = data.frame(leaf = inputData$leaf, exposure = inputData$exposure ), fup = fup, B =B, cohort = cohort)
+myTS = methods::new("permutationPoissonTS", tree = tree, data = data.frame(leaf = inputData$leaf, exposure = inputData$exposure ), fup = fup, B =B, cohort = cohort)
 
 if(verbose) cat("Parsing the tree...")
 tim = system.time({
@@ -111,7 +111,7 @@ if('mapNodesLeaves' %in% names(parsedParameters))
 {
 	myTS@mapNodesLeaves = parsedParameters$mapNodesLeaves
 }
-else{myTS = TBSS:::mapNodesLeaves(myTS)}
+else{myTS = mapNodesLeaves(myTS)}
 })
 if(verbose) cat(sprintf("Done. \n \n Computation took approximately %.3f seconds \n\n\n", tim[3]))
 

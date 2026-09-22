@@ -2,10 +2,19 @@
 % Please edit documentation in R/uncon_bernoulli_llrt.R
 \name{uncon_bernoulli_llrt_vectorized}
 \alias{uncon_bernoulli_llrt_vectorized}
-\title{same function but vectorized.}
+\title{log-likelihood ratio for binomial distribution 
+compute the log-likelihood ratio test statistic for unconditional binomial analysis (vectorized)}
 \usage{
 uncon_bernoulli_llrt_vectorized(case, control, p)
 }
+\arguments{
+\item{case}{number of case (successes)}
+
+\item{control}{number of control (failures)}
+
+\item{p}{theoretical probability of the binomial}
+}
 \description{
-same function but vectorized.
+log-likelihood ratio for binomial distribution 
+compute the log-likelihood ratio test statistic for unconditional binomial analysis (vectorized)
 }

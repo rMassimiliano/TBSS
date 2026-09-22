@@ -17,11 +17,16 @@ evalPower = function(object,
                      parallel = FALSE,
                      ncpus = NULL)
 {
+
+ if(parallel & (length(ncpus) == 0))
+ {
+  ncpus = parallel::detectCores() - 1
+ }
  if(length(object@LRT) == 0) object  = computeLRT(object)
  if(length(object@LRT_H0) == 0) object  = monteCarlo(object,parallel,ncpus)
 
  T_boot = c(apply(object@LRT_H0,2,max), max(object@LRT))
- T_decision = quantile(T_boot, 1-alpha)
+ T_decision = stats::quantile(T_boot, 1-alpha)
 
  ## function that compute one Monte Carlo replicate for power
  do_MC_pow = function(...)
@@ -29,7 +34,7 @@ evalPower = function(object,
   boot_object = object
   ## re-generate data under the alternative
   boot_object = H1_gen(object,alternativeParameter, alternativeLeaves)
-  statistic = max(TBSS:::computeLRT(boot_object)@LRT)
+  statistic = max(computeLRT(boot_object)@LRT)
   return(statistic)
 }
 

@@ -5,17 +5,19 @@
 \alias{tree_example}
 \title{An example of tree with 25 nodes}
 \format{
-## `tree_example`
-A data frame with 24 rows and 2 columns describing a hierarchical structure
+A data frame with 24 rows and 2 columns describing a hierarchical structure:
 \describe{
-  \item{childID}{node ID from where an edge start, character.}
+  \item{childID}{node ID from where an edge starts, character.}
   \item{parentID}{node ID to where an edge end, character.}
 }
+}
+\source{
+Simulated dataset.
 }
 \usage{
 data(tree_example)
 }
 \description{
-The format of the data is the standard format used by TBSS with two columns, childID and parentID.
+Describes a hierarchical tree structure used as standard input in TBSS.
 }
 \keyword{datasets}

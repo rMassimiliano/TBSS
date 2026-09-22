@@ -105,12 +105,12 @@ function (object)
     ## generate leaf data
     boot_hat_beta = array(0,dim =c(length(indx),2))
     sds = sapply(var_beta_rob, \(x) sqrt(x[1,1]))
-    boot_hat_beta[,1] = rnorm(length(indx),hat_beta[,1],sds)
+    boot_hat_beta[,1] = stats::rnorm(length(indx),hat_beta[,1],sds)
     
     cmeans = (boot_hat_beta[,1] - hat_beta[,1])* sapply(var_beta_rob, \(x) x[1,2]/x[1,1])
     
     csds = sqrt(sapply(var_beta_rob, \(x) x[2,2] - x[1,2]*x[2,1]/x[1,1]))
-    boot_hat_beta[,2] = rnorm(length(indx),cmeans,csds)
+    boot_hat_beta[,2] = stats::rnorm(length(indx),cmeans,csds)
 
     object@nodeSS$events_control[indx] = exp(-boot_hat_beta[,1]) * object@nodeSS$total_person_time_control[indx]
 

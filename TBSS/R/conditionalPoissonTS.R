@@ -3,7 +3,7 @@
 ### Conditional Possion Tree Scan
 #############################################
 #############################################
-
+#' @importFrom rlang .data
 setMethod("computeLRT", signature(object = "conditionalPoissonTS"), function(object) {
   if(length(object@mapNodesLeaves) == 0) object = mapNodesLeaves(object)
   if(length(object@nodeSS) == 0) object = computeSS(object)
@@ -51,6 +51,7 @@ setMethod("computeLRT", signature(object = "conditionalPoissonTS"), function(obj
 
 
 #' generate a new tree under the global null H0
+#' @param object an object of class TS
 setMethod("H0_gen", signature(object = "conditionalPoissonTS"),
 function(object)
 {
@@ -63,7 +64,7 @@ function(object)
   indx = which(object@nodeSS$node %in% leaves_list)
   probs =  object@nodeSS$expected[indx]/sum(object@nodeSS$expected[indx])
 
-  object@nodeSS$observed[indx] =    rmultinom(1,size = TOTAL_OBSERVED, prob = probs)
+  object@nodeSS$observed[indx] =    stats::rmultinom(1,size = TOTAL_OBSERVED, prob = probs)
   
      ## update only the SS for the nodes that are used in the LRT
   ind_set = which(!(object@nodeSS$node%in% leaves_list))
@@ -79,7 +80,11 @@ function(object)
 )
 
 
-
+#' Summary method
+#' @description provide a (minimal) summary of the TBSS analysis results.  Specific instances of TS class might implement more detailed summaries
+#' @param object an object of class TS
+#'@rdname TS
+#'@export
 setMethod(f = "summary",
           signature = "conditionalPoissonTS",
           definition = function(object){
@@ -98,9 +103,9 @@ setMethod(f = "summary",
 	  suppressMessages({
 	retval =   retval |>
 	           dplyr::full_join(object@nodeSS) |>
-	           dplyr::mutate(relativeRisk = (observed/expected)/((TOTAL_OBSERVED - observed)/(TOTAL_EXPECTED - expected)), excessCases = observed - expected *(TOTAL_OBSERVED -observed)/(TOTAL_EXPECTED - expected)) |>
-		   dplyr::mutate(expected = expected * TOTAL_OBSERVED/TOTAL_EXPECTED) |>
-	           dplyr::select(node,observed,expected,relativeRisk, excessCases,LRT,pvalue) 
+	           dplyr::mutate(relativeRisk = (.data$observed/.data$expected)/((TOTAL_OBSERVED - .data$observed)/(TOTAL_EXPECTED - .data$expected)), excessCases = .data$observed - .data$expected *(TOTAL_OBSERVED -.data$observed)/(TOTAL_EXPECTED - .data$expected)) |>
+		   dplyr::mutate(expected = .data$expected * TOTAL_OBSERVED/TOTAL_EXPECTED) |>
+	           dplyr::select(.data$node,.data$observed,.data$expected,.data$relativeRisk, .data$excessCases,.data$LRT,.data$pvalue) 
 	  })
 	  return(retval)
 	  })

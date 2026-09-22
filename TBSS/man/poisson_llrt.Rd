@@ -2,10 +2,21 @@
 % Please edit documentation in R/poisson_llrt.R
 \name{poisson_llrt}
 \alias{poisson_llrt}
-\title{compute the log-likelihood ratio test for two Poisson with different offsets (person time)}
+\title{Poisson  log-likelihood ratio statistic
+compute the log-likelihood ratio statistic for  for the difference in mean of two Poisson distributions with different offsets (person time)}
 \usage{
 poisson_llrt(observed, observed_pt, expected, expected_pt)
 }
+\arguments{
+\item{observed}{number of events for the first Poisson}
+
+\item{observed_pt}{time reference (or person time) for the first Poisson}
+
+\item{expected}{number of events for the second Poisson}
+
+\item{expected_pt}{time reference (or person time) for the second Poisson}
+}
 \description{
-compute the log-likelihood ratio test for two Poisson with different offsets (person time)
+Poisson  log-likelihood ratio statistic
+compute the log-likelihood ratio statistic for  for the difference in mean of two Poisson distributions with different offsets (person time)
 }
