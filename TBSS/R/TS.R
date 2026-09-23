@@ -152,7 +152,7 @@ setMethod("H1_gen",signature(object = "TS"), function(object, alternativeParamet
 }
 if(parallel)
 {
- cl <- parallel::makeCluster(ncpus)
+ cl = parallel::makeCluster(ncpus)
  parallel::clusterExport(cl, "do_MC", envir = environment())
  parallel::clusterExport(cl, "object", envir = environment())
  boot_LRT = parallel::parSapply(cl, 1:object@B, do_MC)
