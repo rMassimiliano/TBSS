@@ -4,6 +4,12 @@
 #############################################
 #############################################
 #' @importFrom rlang .data
+setClass(Class = "conditionalPoissonTS",  contains = 'unconditionalPoissonTS')
+
+#' log-likelihood ratio statistics 
+#' @description \code{computeLRT()} Compute The log-likelihood ratio statistics for conditionalPoissonTS 
+#' @param object an object of class TS
+#' @rdname conditionalPoissonTS 
 setMethod("computeLRT", signature(object = "conditionalPoissonTS"), function(object) {
   if(length(object@mapNodesLeaves) == 0) object = mapNodesLeaves(object)
   if(length(object@nodeSS) == 0) object = computeSS(object)
@@ -25,33 +31,10 @@ setMethod("computeLRT", signature(object = "conditionalPoissonTS"), function(obj
  })
 
 
-
-##setMethod("computeSS", signature(object = "conditionalPoissonTS"), function(object)
-##{
-##  object@nodeSS = data.frame(node = names(object@mapNodesLeaves), observed = 0L, expected = 0L)
-##
-##  TOTAL_EXPECTED = sum(object@data$expected)
-##  TOTAL_OBSERVED = sum(object@data$observed)
-##  
-##  for(r in 1:length(object@mapNodesLeaves))
-##  {
-##   ind = which(object@leaves %in% object@mapNodesLeaves[[r]])
-##   object@nodeSS$node[r]     = names(object@mapNodesLeaves)[r]
-##   object@nodeSS$observed[r] = sum(object@data$observed[ind])
-##   object@nodeSS$expected[r] = sum(object@data$expected[ind]) ##*TOTAL_OBSERVED/TOTAL_EXPECTED
-##  }
-##  return(object)
-##}
-##)
-
-
-
-
-
-
-
-#' generate a new tree under the global null H0
+#' Data under the null model
+#' @description \code{H0_gen()} generate data under the null
 #' @param object an object of class TS
+#' @rdname conditionalPoissonTS 
 setMethod("H0_gen", signature(object = "conditionalPoissonTS"),
 function(object)
 {
@@ -81,10 +64,10 @@ function(object)
 
 
 #' Summary method
-#' @description provide a (minimal) summary of the TBSS analysis results.  Specific instances of TS class might implement more detailed summaries
+#' @description \code{summary()} provide a summary of the conditional poisson TBSS analysis results.  
 #' @param object an object of class TS
-#'@rdname TS
-#'@export
+#' @rdname conditionalPoissonTS 
+#' @export 
 setMethod(f = "summary",
           signature = "conditionalPoissonTS",
           definition = function(object){

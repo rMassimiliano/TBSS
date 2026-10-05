@@ -54,7 +54,7 @@ setClass(Class = "unconditionalCaseCaseTimeControlTS", slots = c(p = 'numeric'),
 #' @name unconditionalPoissonTS
 setClass(Class = "unconditionalPoissonTS",  contains = 'TS')
 
-#' Unconditional Poisson TS class
+#' Conditional Poisson TS class
 #' @description Define the class for Unconditional Poisson TBSS and inherit from unconditionalPoissonTS
 #' @docType class
 #' @name conditionalPoissonTS 

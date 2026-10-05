@@ -14,16 +14,20 @@ applyNodeSpecificWashout(object, washData, inputData)
 \item{inputData}{data including events happened from the index data until end of follow-up}
 }
 \value{
-the function returns as output an updated TS object.
+The function returns as output an updated TS object.
 The updated TS object includes a the slot \code{idInNode} which is a named list where each element is a tree node associated with a vector o patientsID to be considered in that node
-If \code{object@fup = TRUE}, that is to say we are accounting for person time, a second named list \code{personTime} is also included in the output. 
+If \code{object@fup = TRUE}, that is to say we are accounting for person time, other two named list \code{personTime} and \code{personTimeNotInNode} are also included in the output. 
 The \code{personTime} includes the total person time, in days, for the exposed and comparator groups.
 The person time is weighted using the weight provided in the cohort file. In case an event happens the same day as the index date, we assume that the event after 1/2 a day. 
-Patients excluded from the washout procedure are "censored" rather than excluded from the analysis, hence their person time counts. For "censored" patients we consider as person time the length of the follow-up.
+Patients excluded from the washout procedure are "censored" rather than excluded from the analysis, hence their person time counts. For "censored" patients we consider as person time the length of the follow-up. 
+\code{personTimeNotInNode} includes person time for all the individuals that did not experienced that node event.
 }
 \description{
 function that applies a node specific washout.
 }
 \details{
 This function assumes that some slots of the TS class have been appropriately initialized. Specifically the: 1) \code{cohort} slot where each row is a patient, columns are (patientID,  indexDate, exposure,   weight, follow-up); 2) the \code{mapNodeLeaves} slot that is a list that for each node provides the corresponding leaves linked to that node; 3) the  \code{fup} slot that if TRUE compute the person time for each individual in each node.
+}
+\references{
+Russo, M., Sreedhara, S.K., Smith, J., Davis, S.E., Maro, J.C., Deramus, T., Lii, J., Yang, J., Desai, R.J., Hernández-Muñoz, J.J. and Ma, Y., 2026. Electronic health record-enhanced signal detection using tree-based scan statistic methods. American Journal of Epidemiology, 195(1), pp.178-187.
 }

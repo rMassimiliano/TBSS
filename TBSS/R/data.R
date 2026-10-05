@@ -63,3 +63,13 @@
 #'     }
 #' @source Simulated dataset.
 "survival_poisson_example"
+
+#' Example dataset for permutation based TBSS (permutationPoissonTS) 
+#' @format The format of the data is a list with two data sets cohort and diagnosis table
+#'     \describe{
+#'       \item{cohort}{ a \code{data.frame} with seven columns 
+#'	 that are 'patientID', 'indexDate', 'exposure','weight', 'strata', 'followupStart' and 'followupEnd'.}  
+#'	 \item{diagnosis table}{ a \code{data.frame} with three columns: 'patientID', 'date', 'leaf'. The date refer to occurrences of the event codified by leaf. Patients can have multiple events (there will be no double counting). }
+#'}
+#' @source Simulated dataset.
+"patient_level_data"

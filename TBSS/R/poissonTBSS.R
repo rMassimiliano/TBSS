@@ -10,6 +10,10 @@
 #'@param direction can be either \code{'positive'}, \code{"negative"} or, \code{"all"} by default (\code{direction = 'positive'}) poissonTBSS only look at nodes where the number of expected cases is larger than the number of observed cases, or equivalently the excess of cases is positive. Setting  \code{direction = '\code{"all"}'} test all nodes, while \code{direction  = "negative"} only node with negative excess of cases.
 #'@param nodeToRemove a character vector with user-specified nodes to be removed from the analysis.  Note that sufficient statistics for these nodes are computed, but they are excluded from the testing procedure. By removing nodes from the list of tests, power can increase because of the decreased number of hypotheses that are tested. This list should be specified before running the analysis.  
 #'@param seed a number indicating the seed used for the analysis, i.e., the input of \code{set.seed()}. Default \code{seed  = 8277}.
+#'@references
+#' Kulldorff, M., Fang, Z. and Walsh, S.J., 2003. A tree-based scan statistic for database disease surveillance. Biometrics, 59(2), pp.323-331.
+#'
+#' Russo, M. and Wang, S.V., 2024. An open‐source implementation of tree‐based scan statistics. Pharmacoepidemiology and drug safety, 33(3), p.e5765.
 #'@export
 #'@examples 
 #' ## Unconditional Poisson TBSS examples

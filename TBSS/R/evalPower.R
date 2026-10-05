@@ -7,8 +7,18 @@
 #' @param R is the number of dataset simulated under the alternative and used to estimate the power. 
 #' @param parallel if \code{TRUE} parallel computing is used to compute the bootstrap p-values.
 #' @param ncpus number of cpus used if \code{parallel = TRUE}. If no value is provided set to  \code{ncpus = detectCores() - 1}.
-
 #' @export
+#' @examples
+#' library(TBSS)
+#'
+#' # load tree 
+#' data("tree_example", package = 'TBSS')
+#' # load data
+#' data("poisson_TBSS_example", package = 'TBSS')
+#' dat = poisson_TBSS_example
+#' # run an analysis - we can also only initialize a TS object
+#' mod_tbss = poissonTBSS(data = dat, tree = tree_example)
+#' evalPower(mod_tbss,alternativeParameter=1.5, alternativeLeaves= "Node-25",alpha=0.05,R=1000)
 evalPower = function(object,
 		     alternativeParameter = 1,
 		     alternativeLeaves = NULL,

@@ -96,3 +96,8 @@ mod_tbss = bernoulliTBSS(case = data_treated, control = data_untreated,
 # inspect potential signals
 summary(mod_tbss) |> dplyr::filter(pvalue <=0.05)
 }
+\references{
+Kulldorff, M., Fang, Z. and Walsh, S.J., 2003. A tree-based scan statistic for database disease surveillance. Biometrics, 59(2), pp.323-331.
+
+Russo, M. and Wang, S.V., 2024. An open‐source implementation of tree‐based scan statistics. Pharmacoepidemiology and drug safety, 33(3), p.e5765.
+}

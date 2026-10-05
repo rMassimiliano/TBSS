@@ -31,5 +31,13 @@
 \description{
 Define the class for Unconditional Poisson TBSS and directly inherit from TS
 
-provide a  summary of the results of and unconditional Poisson TBSS analysis.
+\code{computeSS()} Compute sufficient statistics for the unconditionalPoissonTS
+
+\code{computeLRT()} Compute The log-likelihood ratio statistics for unconditionalPoissonTS
+
+\code{H0_gen()} generate data under the null
+
+\code{summary()} provide a  summary of the results of and unconditional Poisson TBSS analysis.
+
+\code{H1_gen()} generate under a specific alternative model
 }

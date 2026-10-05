@@ -17,8 +17,23 @@
 #'@param relative, if \code{FALSE} force the analysis to be on means rather than rates even when folloup time start and end days are provided in the cohort file. If followup details are not provided this parameter is ignored. 
 
 #'@details Note if data regarding followup time is not provided we use the convention that all events in the diagnosis table occuring from the index date on (with the index date excluded) are used for the analysis. Similarly, all data preceding the index date (included) are used for washout. This behaivior can be changed by setting the \code{washout_window} argument and setting  the columns corresponding to the parameters for the follow-up in the cohort file appropriately.
-
-#'@export
+#'@references 
+#' Russo, M., Sreedhara, S.K., Smith, J., Davis, S.E., Maro, J.C., Deramus, T., Lii, J., Yang, J., Desai, R.J., Hernández-Muñoz, J.J. and Ma, Y., 2026. Electronic health record-enhanced signal detection using tree-based scan statistic methods. American Journal of Epidemiology, 195(1), pp.178-187.
+#' @export
+#' @examples
+#' library(TBSS)
+## load data
+#' data(patient_level_data, package = 'TBSS')
+#' attach(patient_level_data)
+#' ## load tree
+#' data(tree_example, package = 'TBSS')
+#' 
+#' ## running the algorithm eith 30 permutation with 2 cores in parallel for this example
+#' ## default is 999 without parallelization
+#' mod_tbss = permutationTBSS(cohort, diagnosis_table, tree_example,
+#'			       B = 30, parallel = TRUE, ncpus = 2) 
+#' 
+#' summary(mod_tbss) |> head()
 permutationTBSS = function(cohort, diagnosis_table,tree, min_events = 2, B = 999, parallel = FALSE, ncpus = NULL, nodeToRemove = NULL,washout_window = NULL, direction = 'positive', offset = "unscaled", seed  = 8277, parsedParameters = NULL, verbose = TRUE, relative = TRUE)
 {
 match.arg(offset, c("sum_of_weights", "unscaled"))

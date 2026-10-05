@@ -1,5 +1,33 @@
-#' Populate the leaves slot
-#' @description Populate the slot leaves of TS with a vector of the unique values of the first column of data (leaves ID). 
+## This file pre-define the classes used in the package to avoid issues due to the fact that files are loaded in alphabetical order
+#General TS class for tree scan
+#'General TS class for TBSS
+#' General TS class.
+#' @description This class is used as a template for all the TBSS implementation. Several generic function (e.g. utilities to parse the tree) are implemented in this generic class
+#'@slot data contains the data in a \code{data.frame} one row for each leaf of the tree.  The number of columns varies depending on the analysis, while the first column is the name of a leaf. 
+#'@slot tree a\code{data.frame} with two columns representing the hierarchical structure in a edge list format. Each row represents a directional edge between a node and its parent node, so the two columns are a nodeID and parentID. The IDs are treated as \code{character}.
+#'@slot leaves is a vector with the names of the leaves, typically the first column of the slot \code{data}
+#'@slot nodes a vector with the names of all the nodes in the tree, i.e. the first column of \code{tree}
+#'@slot mapNodesLeaves is a named list. Each element of the list is named after a node, while the content of the list indicates the leaves associated with that node. 
+#'@slot nodesToTest is a vector defining the nodes to be tested. Some nodes could be excluded from the testing procedure  (e.g., because there are too few data points) and can be excluded from this list.
+#'@slot nodeSS is a \code{data.frame} reporting the sufficient statistics for each node in the tree. The number of columns varies depending on the analysis, and the first column is the name of a node. 
+#'@slot LRT is a named vector containing the node-specific discrepancy measure computed on the observed data for each node in \code{nodesToTest}.
+#' @slot B is the number of MC replicates used to approximate the null distribution of LRT
+#'@slot LRT_H0 is a \code{matrix} with the MC-distribution of LRT. Each column is an MC replicate.
+#' @docType class
+#' @name TS-class
+#' @aliases TS-class TS
+setClass(Class = "TS", slots = c(data = 'data.frame',
+                                 tree ='data.frame',
+                                 leaves = 'character',
+                                 nodes = 'character',
+                                 mapNodesLeaves = 'list',
+				 nodesToTest ='character',
+                                 nodeSS = 'data.frame',
+                                 LRT ='numeric',
+                                 B = 'numeric',
+                                 LRT_H0 = 'matrix'))
+#' Utility functions of the TS class
+#' @description \code{listLeaves()} Populate the slot leaves of TS with a vector of the unique values of the first column of data (leaves ID). 
 #' @param object an object of class TS
 #' @rdname TS
 listLeaves = function(object)
@@ -8,8 +36,9 @@ listLeaves = function(object)
  return(object)
 }
 
+
 #' Populate the slot nodes
-#' @description Populate the slot node of TS with a vector containing the unique value of the first column of the slot \code{tree}. Empty \code{character} are not allowed
+#' @description \code{listNodes()} Populate the slot node of TS with a vector containing the unique value of the first column of the slot \code{tree}. Empty \code{character} are not allowed
 #' @param object an object of class TS
 #' @rdname TS
 listNodes = function(object)
@@ -21,7 +50,7 @@ listNodes = function(object)
 
 
 #' Map nodes to the corresponding leaves 
-#' @description Create a named list. Each element of the list is named after a node and contains the ID of leaves linked to that node. The function returns an object of class TS with a populated slot \code{mapNodeLeaves}.
+#' @description \code{mapNodesLeaves()} Create a named list. Each element of the list is named after a node and contains the ID of leaves linked to that node. The function returns an object of class TS with a populated slot \code{mapNodeLeaves}.
 #' @param object an object of class TS
 #' @param ...  additional arguments (currently for retro-compatibility, not used)
 #' @rdname TS
@@ -67,10 +96,8 @@ mapNodesLeaves =  function(object, ...)
 
 
 
-
-
 #' Compute node-specific sufficient statistics
-#' @description generic function to compute node-specific sufficient statistics. The function populates the slot \code{nodeSS}. 
+#' @description \code{computeSS()} generic function to compute node-specific sufficient statistics. The function populates the slot \code{nodeSS}. 
 #' @param object an object of class TS
 #' @param parallel if \code{parallel = TRUE} parallel computing is used to compute the Monte Carlo p-values.
 #' @param ncpus number of cpus used if \code{parallel = TRUE}. If no value is provided, the default is \code{ncpus = detectCores() - 1}.
@@ -87,7 +114,7 @@ setMethod("computeSS", signature(object = "TS"), function(object,parallel = FALS
 
 
 #' Compute node-specific discrepancy measures
-#' @description generic function to compute node-specific discrepancy measures. The function populates the slot \code{nodeSS}. 
+#' @description \code{computeLRT()} generic function to compute node-specific discrepancy measures. The function populates the slot \code{nodeSS}. 
 #' @param object an object of class TS
 #' @param parallel if \code{parallel = TRUE} parallel computing is used to compute the Monte Carlo p-values.
 #' @param ncpus number of cpus used if \code{parallel = TRUE}. If no value is provided, the default is \code{ncpus = detectCores() - 1}.
@@ -102,7 +129,7 @@ setMethod("computeLRT", signature(object = "TS"), function(object,parallel = FAL
 })
 
 #' Generate data under the null distribution
-#' @description generic function to generate data under the null distribution. Instances of this function are used in \code{monteCarlo} 
+#' @description \code{H0_gen()} generic function to generate data under the null distribution. Instances of this function are used in \code{monteCarlo} 
 #' @param object an object of class TS
 # Regenerate the data in TS under the null distribution 
 #' @rdname TS
@@ -117,7 +144,7 @@ setMethod("H0_gen",signature(object = "TS"), function(object) {
 })
 
 #' Generate data under an alternative distribution
-#' @description generic function to generate data under an alternative distribution. The generation starts from the null and modifies generation parameters for the leaves in \code{alternativeLeaves}. The argument \code{alternativeParameter} contains parameters used to change the distribution of the \code{alternativeLeaves}. The meaning of this parameter varies according to the specific TBSS. Instances of this function are used to compute power in \code{evalPower}. 
+#' @description \code{H1_gen()} generic function to generate data under an alternative distribution. The generation starts from the null and modifies generation parameters for the leaves in \code{alternativeLeaves}. The argument \code{alternativeParameter} contains parameters used to change the distribution of the \code{alternativeLeaves}. The meaning of this parameter varies according to the specific TBSS. Instances of this function are used to compute power in \code{evalPower}. 
 #' @param object an object of class TS
 #' @param alternativeParameter a number or a vector of length \code{length(alternativeLeaves)} containing parameters to be used to change the distribution of the \code{alternativeLeaves}
 #' @param alternativeLeaves a vector containing the IDs of the leaves to be modified from the null distribution.
@@ -171,7 +198,7 @@ else
 
 
 #'  Show method
-#' @description  Print the most likely cut in a TBSS analysis with log-likelihood ratio and p-value
+#' @description  \code{show()} print the most likely cut in a TBSS analysis with log-likelihood ratio and p-value
 #' @param object an object of class TS
 #' @rdname TS
 setMethod(f = "show",
@@ -187,7 +214,7 @@ setMethod(f = "show",
 
 
 #'  Summary method
-#' @description provide a (minimal) summary of the TBSS analysis results.  Specific instances of TS class might implement more detailed summaries
+#' @description \code{summary()} provide a (minimal) summary of the TBSS analysis results.  Specific instances of TS class might implement more detailed summaries
 #' @param object an object of class TS
 #' @rdname TS
 #'@export

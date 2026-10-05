@@ -1,7 +1,7 @@
 #' This function implement TreeScan for a case-case-time control design
-#' @param `case`: a matrix or data.frame with three columns (leavesID, cases in the reference window, cases in the hazard window)
-#' @param `control`: a matrix or data.frame with three columns (leavesID, cases in the reference window, cases in the hazard window)
-#' @param `tree`: a matrix or data.frame with two columns (nodeID, parantNodeID) 
+#' @param `case` a matrix or data.frame with three columns (leavesID, cases in the reference window, cases in the hazard window)
+#' @param `control` a matrix or data.frame with three columns (leavesID, cases in the reference window, cases in the hazard window)
+#' @param `tree` a matrix or data.frame with two columns (nodeID, parantNodeID) 
 #' @param `B` number of bootstrap replicates. Default is `999`.
 #' @param `parallel` if TRUE parallel computing is used to compute the bootstrap p-values.
 #' @param `ncpus` number of cpus used if `parallel = TRUE`. If no value is provided set to  `detectCores() - 1`.

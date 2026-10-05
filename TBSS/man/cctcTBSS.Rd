@@ -16,11 +16,11 @@ cctcTBSS(
 )
 }
 \arguments{
-\item{case}{: a matrix or data.frame with three columns (leavesID, cases in the reference window, cases in the hazard window)}
+\item{case}{a matrix or data.frame with three columns (leavesID, cases in the reference window, cases in the hazard window)}
 
-\item{control}{: a matrix or data.frame with three columns (leavesID, cases in the reference window, cases in the hazard window)}
+\item{control}{a matrix or data.frame with three columns (leavesID, cases in the reference window, cases in the hazard window)}
 
-\item{tree}{: a matrix or data.frame with two columns (nodeID, parantNodeID)}
+\item{tree}{a matrix or data.frame with two columns (nodeID, parantNodeID)}
 
 \item{B}{number of bootstrap replicates. Default is `999`.}
 

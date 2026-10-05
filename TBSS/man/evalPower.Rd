@@ -32,3 +32,15 @@ evalPower(
 \description{
 Evaluate power of TBSS for a specific alternative distribution
 }
+\examples{
+library(TBSS)
+
+# load tree 
+data("tree_example", package = 'TBSS')
+# load data
+data("poisson_TBSS_example", package = 'TBSS')
+dat = poisson_TBSS_example
+# run an analysis - we can also only initialize a TS object
+mod_tbss = poissonTBSS(data = dat, tree = tree_example)
+evalPower(mod_tbss,alternativeParameter=1.5, alternativeLeaves= "Node-25",alpha=0.05,R=1000)
+}

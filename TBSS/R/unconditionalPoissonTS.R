@@ -8,7 +8,7 @@ setClass(Class = "unconditionalPoissonTS",  contains = 'TS')
 
 
 #' Sufficient Statistics
-#' Compute sufficient statistics for the unconditionalPoissonTS
+#' @description \code{computeSS()} Compute sufficient statistics for the unconditionalPoissonTS
 #' @param object an object of class TS
 #' @rdname unconditionalPoissonTS 
 setMethod("computeSS", signature(object = "unconditionalPoissonTS"), function(object)
@@ -30,7 +30,7 @@ setMethod("computeSS", signature(object = "unconditionalPoissonTS"), function(ob
 
 
 #' log-likelihood ratio statistics 
-#' Compute The log-likelihood ratio statistics for unconditionalPoissonTS 
+#' @description \code{computeLRT()} Compute The log-likelihood ratio statistics for unconditionalPoissonTS 
 #' @param object an object of class TS
 #' @rdname unconditionalPoissonTS 
 setMethod("computeLRT", signature(object = "unconditionalPoissonTS"), function(object) {
@@ -50,7 +50,8 @@ setMethod("computeLRT", signature(object = "unconditionalPoissonTS"), function(o
    return(object)
  })
 
-#' generate data under the null
+#' Data under the null model
+#' @description \code{H0_gen()} generate data under the null
 #' @param object an object of class TS
 #' @rdname unconditionalPoissonTS 
 setMethod("H0_gen", signature(object = "unconditionalPoissonTS"),
@@ -77,8 +78,8 @@ function (object)
 )
 	  
 
-#'  Summary method
-#' @description provide a  summary of the results of and unconditional Poisson TBSS analysis. 
+#' Summary method
+#' @description \code{summary()} provide a  summary of the results of and unconditional Poisson TBSS analysis. 
 #' @param object an object of class TS
 #' @rdname unconditionalPoissonTS 
 setMethod(f = "summary",
@@ -104,8 +105,8 @@ setMethod(f = "summary",
 	  })
 
 
-
-#' generate under a specific alternative model
+#' Data under an alternative model
+#' @description \code{H1_gen()} generate under a specific alternative model
 #' @param object an object of class TS
 #' @param alternativeParameter mean parameter(s) used for leaves under the alternative
 #' @param alternativeLeaves leaves under the alternative model
