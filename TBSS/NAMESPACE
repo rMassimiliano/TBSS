@@ -9,3 +9,7 @@ export(poissonTBSS)
 export(robustSurvivalTBSS)
 exportMethods(summary)
 importFrom(rlang,.data)
+importFrom(survival,
+  Surv,
+  coxph
+)

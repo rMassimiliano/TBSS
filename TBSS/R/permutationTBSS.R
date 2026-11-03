@@ -9,16 +9,19 @@
 #' @param ncpus number of cpus used if \code{parallel = TRUE}. If no value is provided, the default is \code{ncpus = detectCores() - 1}.
 #'@param direction can be either \code{'positive'}, \code{"negative"} or, \code{"all"} by default (\code{direction = 'positive'}) poissonTBSS only look at nodes where the number of expected cases is larger than the number of observed cases, or equivalently the excess of cases is positive. Setting  \code{direction = '"all"'} test all nodes, while \code{direction  = "negative"} only node with negative excess of cases.
 #'@param nodeToRemove a character vector with user-specified nodes to be removed from the analysis.  Note that sufficient statistics for these nodes are computed, but they are excluded from the testing procedure. By removing nodes from the list of tests, power can increase because of the decreased number of hypotheses that are tested. This list should be specified before running the analysis.  
-#'@param washout_window  a numeric vector with two negative numbers that indicate the length  of the washout window relative to the index data. For example, if washout_window = c(-180,-1) all diagnosis events that occurred in the 180 days (including days -180 and -1)  before the index are used for washout. The defaul is \code{washout_window = NULL} indicating that all events before the index date (excluded) are used for washout.
+#'@param washout_window  a numeric vector with two negative numbers that indicate the length  of the washout window relative to the index data. For example, if washout_window = c(-180,-1) all diagnosis events that occurred in the 180 days (including days -180 and -1)  before the index are used for washout. The default is \code{washout_window = NULL} indicating that all events before the index date (excluded) are used for washout.
 #'@param offset  indicate how expected counts are scaled to be compared with observed counts. Possible values include "sum_of_weights" indicating that expected counts are scaled with  (N weighted total exposed / N weighted total comparator) and "unscaled" for no scaling. Alternative scaling can be used by directly scaling the weights in the cohort file, and using the "unscaled" option for offset. By default no scaling is applied.
+#' @param statistic indicate the test statistic to be used for the permutation test. Possible values are `Poisson` (the default) that uses the log-likelihood ratio test for testing the difference of the ratios of two Poisson distributions and `Cox` that uses the log partial likelihood ratio from a Cox model. 
 #'@param seed a number indicating the seed used for the analysis, i.e., the input of \code{set.seed()}. Default \code{seed  = 8277}.
 #' @param parsedParameters a names list of object that can be precomputed. This include mapNodeTree (i.e., the tree parsing step), and idInNode (the list of nodes/patients created by the \code{applyNodeSpecificWashout()} function).
 #'@param verbose, if \code{TRUE} (default) print some messages 
-#'@param relative, if \code{FALSE} force the analysis to be on means rather than rates even when folloup time start and end days are provided in the cohort file. If followup details are not provided this parameter is ignored. 
+#'@param relative, if \code{FALSE} force the analysis to be on means rather than rates even when followup time start and end days are provided in the cohort file. If followup details are not provided this parameter is ignored. 
 
-#'@details Note if data regarding followup time is not provided we use the convention that all events in the diagnosis table occuring from the index date on (with the index date excluded) are used for the analysis. Similarly, all data preceding the index date (included) are used for washout. This behaivior can be changed by setting the \code{washout_window} argument and setting  the columns corresponding to the parameters for the follow-up in the cohort file appropriately.
+#'@details Note if data regarding followup time is not provided we use the convention that all events in the diagnosis table occurring from the index date on (with the index date excluded) are used for the analysis. Similarly, all data preceding the index date (included) are used for washout. This behavior can be changed by setting the \code{washout_window} argument and setting  the columns corresponding to the parameters for the follow-up in the cohort file appropriately.
 #'@references 
 #' Russo, M., Sreedhara, S.K., Smith, J., Davis, S.E., Maro, J.C., Deramus, T., Lii, J., Yang, J., Desai, R.J., Hernández-Muñoz, J.J. and Ma, Y., 2026. Electronic health record-enhanced signal detection using tree-based scan statistic methods. American Journal of Epidemiology, 195(1), pp.178-187.
+#'
+#' Russo, M., Hahn, G., Huybrechts, K. F., & Wang, S. V. (2026). A tree-based scan statistic for database studies with time-to-event outcomes. arXiv preprint arXiv:2609.38582.
 #' @export
 #' @examples
 #' library(TBSS)
@@ -34,9 +37,10 @@
 #'			       B = 30, parallel = TRUE, ncpus = 2) 
 #' 
 #' summary(mod_tbss) |> head()
-permutationTBSS = function(cohort, diagnosis_table,tree, min_events = 2, B = 999, parallel = FALSE, ncpus = NULL, nodeToRemove = NULL,washout_window = NULL, direction = 'positive', offset = "unscaled", seed  = 8277, parsedParameters = NULL, verbose = TRUE, relative = TRUE)
+permutationTBSS = function(cohort, diagnosis_table,tree, min_events = 2, B = 999, parallel = FALSE, ncpus = NULL, nodeToRemove = NULL,washout_window = NULL, direction = 'positive', offset = "unscaled", statistic = 'Poisson', seed  = 8277, parsedParameters = NULL, verbose = TRUE, relative = TRUE)
 {
 match.arg(offset, c("sum_of_weights", "unscaled"))
+match.arg(statistic, c("Poisson", "Cox"))
 set.seed(seed)
 ## stop if the parameter min_events is smaller than 2 or negative 
 if(min_events < 2) stop("min_events should be a number greater than 2.")
@@ -68,6 +72,7 @@ if(offset =='sum_of_weights')
   wN = with(cohort,tapply(weight,exposure, sum))
   offset = wN[2]/wN[1]
   cohort$weight  = with(cohort, ifelse(exposure ==0,weight * offset, weight))    
+  if(statistic == 'Cox') warning("Are you sure you want to scale weights while fitting a Cox model? consdier using offset == 'unscaled'")
 }
 
 names(diagnosis_table)[1:3] = c('patientID', 'date', 'leaf')
@@ -94,7 +99,7 @@ diagnosis_table = diagnosis_table[to_keep,]
 ## 2nd divide diagnosis table in two: pre and post washout window
  # add the index date from cohort
 diagnosis_table =   dplyr::left_join(diagnosis_table, cohort, by= 'patientID') 
-## create a variable indicatings date from index
+## create a variable indicating date from index
 diagnosis_table$time = with(diagnosis_table, date - indexDate)
 if(fup)
 {
@@ -116,10 +121,16 @@ washData = diagnosis_table[ind_wash ,]
 ## appropriately scale expected events
 
 ########################
-if(!relative){fup = FALSE}
+if((!relative) & (statistic != 'Cox')){fup = FALSE}
 
+if(statistic == 'Poisson')
+{
 myTS = methods::new("permutationPoissonTS", tree = tree, data = data.frame(leaf = inputData$leaf, exposure = inputData$exposure ), fup = fup, B =B, cohort = cohort)
-
+}
+else if(statistic == 'Cox')
+{
+myTS = methods::new("coxSurvivalTS", tree = tree, data = data.frame(leaf = inputData$leaf, exposure = inputData$exposure ), fup = fup, B =B, cohort = cohort)
+}
 if(verbose) cat("Parsing the tree...")
 tim = system.time({
 if('mapNodesLeaves' %in% names(parsedParameters))

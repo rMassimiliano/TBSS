@@ -73,5 +73,12 @@ setClass(Class = "conditionalPoissonTS",  contains = 'unconditionalPoissonTS')
 #' @docType class
 #' @name permutationPoissonTS-class
 #' @aliases permutationPoissonTS-class permutationPoissonTS
-#' @importFrom rlang .data
 setClass(Class = "permutationPoissonTS",  contains = 'TS', slots = c(idInNode = 'list',personTime = 'list',personTimeNotInNode = 'list', cohort = 'data.frame', fup = 'logical')) 
+
+
+#'  cox survival TBSS 
+#' @description This class is used to implement permutation cox TBSS with node specific washout. It inherit most function from permutationPoissonTS
+#' @docType class
+#' @name coxSurvivalTS-class
+#' @aliases  coxSurvivalTS-class coxSurvivalTS
+setClass(Class = "coxSurvivalTS",  contains = 'permutationPoissonTS')

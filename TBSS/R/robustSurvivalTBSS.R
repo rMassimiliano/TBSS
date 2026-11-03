@@ -9,6 +9,9 @@
 #'@param direction can be either \code{'positive'}, \code{"negative"} or, \code{"all"} by default (\code{direction = 'positive'}) poissonTBSS only look at nodes where the number of expected cases is larger than the number of observed cases, or equivalently the excess of cases is positive. Setting  \code{direction = '\code{"all"}'} test all nodes, while \code{direction  = "negative"} only node with negative excess of cases.
 #'@param nodeToRemove a character vector with user-specified nodes to be removed from the analysis.  Note that sufficient statistics for these nodes are computed, but they are excluded from the testing procedure. By removing nodes from the list of tests, power can increase because of the decreased number of hypotheses that are tested. This list should be specified before running the analysis.  
 #'@param seed a number indicating the seed used for the analysis, i.e., the input of \code{set.seed()}. Default \code{seed  = 8277}.
+#'@references 
+#' Russo, M., Hahn, G., Huybrechts, K. F., & Wang, S. V. (2026). A tree-based scan statistic for database studies with time-to-event outcomes. arXiv preprint arXiv:2609.38582.
+#'@export
 #'@examples 
 #' ## Unconditional Poisson TBSS examples
 #' library(TBSS)
@@ -25,7 +28,6 @@
 #'mod_tbss = robustSurvivalTBSS(data = dat, tree = tree_example, direction = 'all')
 #' # inspect potential signals
 #' summary(mod_tbss) |> dplyr::filter(pvalue <=0.05)
-#'@export
 robustSurvivalTBSS =  function(data,tree, min_events = 1, B = 999, parallel = FALSE, ncpus = NULL, direction = 'positive', nodeToRemove = NULL, seed  = 8277)
 {
  set.seed(seed)

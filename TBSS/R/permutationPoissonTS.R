@@ -1,10 +1,10 @@
 #############################################
 #############################################
-### Unconditional Possion Tree Scan
+### Permutation Possion Tree Scan
 #############################################
 #############################################
-
-
+#' @importFrom rlang .data
+setClass(Class = "permutationPoissonTS",  contains = 'TS', slots = c(idInNode = 'list',personTime = 'list',personTimeNotInNode = 'list', cohort = 'data.frame', fup = 'logical')) 
 
 #' Sufficient Statistics
 #' Compute sufficient statistics for the permutationPoissonTS 

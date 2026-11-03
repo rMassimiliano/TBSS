@@ -57,3 +57,6 @@ mod_tbss = poissonSurvivalTBSS(data = dat, tree = tree_example, direction = 'all
 # inspect potential signals
 summary(mod_tbss) |> dplyr::filter(pvalue <=0.05)
 }
+\references{
+Russo, M., Hahn, G., Huybrechts, K. F., & Wang, S. V. (2026). A tree-based scan statistic for database studies with time-to-event outcomes. arXiv preprint arXiv:2609.38582.
+}

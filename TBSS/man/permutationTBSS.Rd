@@ -16,6 +16,7 @@ permutationTBSS(
   washout_window = NULL,
   direction = "positive",
   offset = "unscaled",
+  statistic = "Poisson",
   seed = 8277,
   parsedParameters = NULL,
   verbose = TRUE,
@@ -39,11 +40,13 @@ permutationTBSS(
 
 \item{nodeToRemove}{a character vector with user-specified nodes to be removed from the analysis.  Note that sufficient statistics for these nodes are computed, but they are excluded from the testing procedure. By removing nodes from the list of tests, power can increase because of the decreased number of hypotheses that are tested. This list should be specified before running the analysis.}
 
-\item{washout_window}{a numeric vector with two negative numbers that indicate the length  of the washout window relative to the index data. For example, if washout_window = c(-180,-1) all diagnosis events that occurred in the 180 days (including days -180 and -1)  before the index are used for washout. The defaul is \code{washout_window = NULL} indicating that all events before the index date (excluded) are used for washout.}
+\item{washout_window}{a numeric vector with two negative numbers that indicate the length  of the washout window relative to the index data. For example, if washout_window = c(-180,-1) all diagnosis events that occurred in the 180 days (including days -180 and -1)  before the index are used for washout. The default is \code{washout_window = NULL} indicating that all events before the index date (excluded) are used for washout.}
 
 \item{direction}{can be either \code{'positive'}, \code{"negative"} or, \code{"all"} by default (\code{direction = 'positive'}) poissonTBSS only look at nodes where the number of expected cases is larger than the number of observed cases, or equivalently the excess of cases is positive. Setting  \code{direction = '"all"'} test all nodes, while \code{direction  = "negative"} only node with negative excess of cases.}
 
 \item{offset}{indicate how expected counts are scaled to be compared with observed counts. Possible values include "sum_of_weights" indicating that expected counts are scaled with  (N weighted total exposed / N weighted total comparator) and "unscaled" for no scaling. Alternative scaling can be used by directly scaling the weights in the cohort file, and using the "unscaled" option for offset. By default no scaling is applied.}
+
+\item{statistic}{indicate the test statistic to be used for the permutation test. Possible values are `Poisson` (the default) that uses the log-likelihood ratio test for testing the difference of the ratios of two Poisson distributions and `Cox` that uses the log partial likelihood ratio from a Cox model.}
 
 \item{seed}{a number indicating the seed used for the analysis, i.e., the input of \code{set.seed()}. Default \code{seed  = 8277}.}
 
@@ -51,13 +54,13 @@ permutationTBSS(
 
 \item{verbose, }{if \code{TRUE} (default) print some messages}
 
-\item{relative, }{if \code{FALSE} force the analysis to be on means rather than rates even when folloup time start and end days are provided in the cohort file. If followup details are not provided this parameter is ignored.}
+\item{relative, }{if \code{FALSE} force the analysis to be on means rather than rates even when followup time start and end days are provided in the cohort file. If followup details are not provided this parameter is ignored.}
 }
 \description{
 This function implements a permutation based TBSS. The function uses as test the likelihood ratio test (LRT) to compare difference in mean of two Poisson distribution and can include offsets (e.g., the person time for the exposure groups). The null distribution for the LRT is computed  using permutation. Hence, unlike other TBSS this implementation require subject level data. Importantly this implementation can use node-specifyc washout, i.e. for each node it does not count patients  that have already experienced the events codified in the node in a pre-specified washout window.
 }
 \details{
-Note if data regarding followup time is not provided we use the convention that all events in the diagnosis table occuring from the index date on (with the index date excluded) are used for the analysis. Similarly, all data preceding the index date (included) are used for washout. This behaivior can be changed by setting the \code{washout_window} argument and setting  the columns corresponding to the parameters for the follow-up in the cohort file appropriately.
+Note if data regarding followup time is not provided we use the convention that all events in the diagnosis table occurring from the index date on (with the index date excluded) are used for the analysis. Similarly, all data preceding the index date (included) are used for washout. This behavior can be changed by setting the \code{washout_window} argument and setting  the columns corresponding to the parameters for the follow-up in the cohort file appropriately.
 }
 \examples{
 library(TBSS)
@@ -75,4 +78,6 @@ summary(mod_tbss) |> head()
 }
 \references{
 Russo, M., Sreedhara, S.K., Smith, J., Davis, S.E., Maro, J.C., Deramus, T., Lii, J., Yang, J., Desai, R.J., Hernández-Muñoz, J.J. and Ma, Y., 2026. Electronic health record-enhanced signal detection using tree-based scan statistic methods. American Journal of Epidemiology, 195(1), pp.178-187.
+
+Russo, M., Hahn, G., Huybrechts, K. F., & Wang, S. V. (2026). A tree-based scan statistic for database studies with time-to-event outcomes. arXiv preprint arXiv:2609.38582.
 }
