@@ -53,5 +53,7 @@ This class is used as a template for all the TBSS implementation. Several generi
 \item{\code{B}}{is the number of MC replicates used to approximate the null distribution of LRT}
 
 \item{\code{LRT_H0}}{is a \code{matrix} with the MC-distribution of LRT. Each column is an MC replicate.}
+
+\item{\code{direction}}{a \code{character} define the direction of the test. For one-side test LRT in the side that is not considered is set to 0 both for the observed data and the ones replicated under the null.}
 }}
 

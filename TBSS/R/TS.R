@@ -254,5 +254,5 @@ applyDirection = function(object, LRT, excess)
   if(length(object@direction) == 0) return(LRT)
   if(object@direction == 'positive') LRT[excess <= 0] = 0
   else if(object@direction == 'negative') LRT[excess >=0] = 0
-  retunr(LRT)
+  return(LRT)
 }

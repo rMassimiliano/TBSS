@@ -11,6 +11,7 @@
 \alias{monteCarlo}
 \alias{show,TS-method}
 \alias{summary,TS-method}
+\alias{applyDirection}
 \title{Utility functions of the TS class}
 \usage{
 listLeaves(object)
@@ -32,6 +33,8 @@ monteCarlo(object, parallel = FALSE, ncpus = NULL)
 \S4method{show}{TS}(object)
 
 \S4method{summary}{TS}(object)
+
+applyDirection(object, LRT, excess)
 }
 \arguments{
 \item{object}{an object of class TS}
@@ -45,6 +48,10 @@ monteCarlo(object, parallel = FALSE, ncpus = NULL)
 \item{alternativeParameter}{a number or a vector of length \code{length(alternativeLeaves)} containing parameters to be used to change the distribution of the \code{alternativeLeaves}}
 
 \item{alternativeLeaves}{a vector containing the IDs of the leaves to be modified from the null distribution.}
+
+\item{LRT}{a vector of node-specific LRT}
+
+\item{excess}{a vector, of the same length as \code{LRT}, with the node-specific excess (e.g., observed minus expected)}
 }
 \description{
 \code{listLeaves()} Populate the slot leaves of TS with a vector of the unique values of the first column of data (leaves ID).
@@ -66,4 +73,6 @@ Function that approximates the null distribution of the node-specific discrepanc
 \code{show()} print the most likely cut in a TBSS analysis with log-likelihood ratio and p-value
 
 \code{summary()} provide a (minimal) summary of the TBSS analysis results.  Specific instances of TS class might implement more detailed summaries
+
+\code{applyDirection()} for one sided tests sets to 0 the LRT in the direction that is not considered in the test. For \code{direction == 'positive'} the LRT with \code{excess<=0} are set to 0 while for \code{direction == 'negative'} the LRT with \code{excess>=0} are set to 0. The function is intended to be used within \code{computeLRT()} so the same restriction applies to the observed data and to every Monte Carlo replicate.
 }

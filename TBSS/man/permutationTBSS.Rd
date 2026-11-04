@@ -50,7 +50,7 @@ permutationTBSS(
 
 \item{seed}{a number indicating the seed used for the analysis, i.e., the input of \code{set.seed()}. Default \code{seed  = 8277}.}
 
-\item{parsedParameters}{a names list of object that can be precomputed. This include mapNodeTree (i.e., the tree parsing step), and idInNode (the list of nodes/patients created by the \code{applyNodeSpecificWashout()} function).}
+\item{parsedParameters}{a names list of object that can be precomputed. This include mapNodeTree (i.e., the tree parsing step), and idInNode (the list of nodes/patients created by the \code{applyNodeSpecificWashout()} function). When follow-up time is specified, personTime and personTimeNotInNode are also needed. These parameters are created by the function \code{applyNodeSpecificWashout()} and if they are not provided they are recomputed.}
 
 \item{verbose, }{if \code{TRUE} (default) print some messages}
 
