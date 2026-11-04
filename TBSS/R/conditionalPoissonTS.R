@@ -20,11 +20,15 @@ setMethod("computeLRT", signature(object = "conditionalPoissonTS"), function(obj
   TOTAL_OBSERVED = sum(object@data$observed)
 
   LRT = numeric(length(object@nodesToTest))
+  excess = numeric(length(object@nodesToTest))
+ 
   for(r in 1:length(object@nodesToTest))
   {
    j = which(object@nodeSS$node == object@nodesToTest[r])
    LRT[r] = uncon_poisson_llrt(object@nodeSS$observed[j],object@nodeSS$expected[j] * TOTAL_OBSERVED/TOTAL_EXPECTED)
+   excess[r] = object@nodeSS$observed[j] - object@nodeSS$expected[j] * TOTAL_OBSERVED/TOTAL_EXPECTED
   }
+   LRT = applyDirection(object, LRT, excess)
    object@LRT = LRT
    names(object@LRT) = object@nodesToTest
    return(object)

@@ -132,6 +132,7 @@ else if(statistic == 'Cox')
 {
 myTS = methods::new("coxSurvivalTS", tree = tree, data = data.frame(leaf = inputData$leaf, exposure = inputData$exposure ), fup = fup, B =B, cohort = cohort)
 }
+myTS@direction = direction
 if(verbose) cat("Parsing the tree...")
 tim = system.time({
 if('mapNodesLeaves' %in% names(parsedParameters))

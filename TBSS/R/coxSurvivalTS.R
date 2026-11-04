@@ -61,6 +61,7 @@ setMethod("computeLRT", signature(object = "coxSurvivalTS"), function(object) {
 
   d = length(object@nodesToTest)
   LRT = numeric(d)
+  coefs = numeric(d)
   coxTBSS = data.frame(node = character(d), coef = numeric(d), LRT = numeric(d))
   i=1
   for(node in object@nodesToTest)
@@ -77,10 +78,12 @@ setMethod("computeLRT", signature(object = "coxSurvivalTS"), function(object) {
   	{
   		cmod = survival::coxph(survival::Surv(time,status)~exposure, weight = tmpData$weight, data = tmpData, ties = "breslow")
   		LRT[i] = -2 * (cmod$loglik[1] - cmod$loglik[2])
-  
+          	coefs[i] = cmod$coef[[1]]
   	}
   	i=i+1
   }
+
+   LRT = applyDirection(object, LRT, coefs)
    object@LRT = LRT
    names(object@LRT) = object@nodesToTest
    return(object)

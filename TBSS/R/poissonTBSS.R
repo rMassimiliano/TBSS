@@ -78,19 +78,23 @@ if(!(direction %in% c("positive","all","negative"))) stop("direction should be '
 
    myTS = methods::new("conditionalPoissonTS", tree = as.data.frame(tree), data = as.data.frame(data), B = B)
  }
+  myTS@direction = direction
 
   ## TBSS analysis
   myTS = mapNodesLeaves(myTS)
   myTS = computeSS(myTS)
 
   ## Remove nodes with a number of events lower than min_events 
+  scale = if(type == 'conditional') sum(myTS@data$observed)/sum(myTS@data$expected) else 1
+  excess = myTS@nodeSS$observed - myTS@nodeSS$expected * scale
+
    if(direction == 'positive')
    {
-    myTS@nodesToTest = myTS@nodeSS$node[(myTS@nodeSS$observed >= min_events) & ((myTS@nodeSS$observed - myTS@nodeSS$expected)>0) & (myTS@nodeSS$expected>0)]
+    myTS@nodesToTest = myTS@nodeSS$node[(myTS@nodeSS$observed >= min_events) & (excess>0) & (myTS@nodeSS$expected>0)]
    }
    else if (direction == 'negative')
    {
-     myTS@nodesToTest = myTS@nodeSS$node[(myTS@nodeSS$observed >= min_events) & ((myTS@nodeSS$observed - myTS@nodeSS$expected)<0 &(myTS@nodeSS$expected>0) )] 
+     myTS@nodesToTest = myTS@nodeSS$node[(myTS@nodeSS$observed >= min_events) & (excess<0 & (myTS@nodeSS$expected>0) )] 
    }
    else
    {

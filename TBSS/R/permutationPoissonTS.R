@@ -49,11 +49,14 @@ setMethod("computeLRT", signature(object = "permutationPoissonTS"), function(obj
 
   ## compute LLR for all the nodes
   LRT = numeric(length(object@nodesToTest))
+  excess = numeric(length(object@nodesToTest))
   for(r in 1:length(object@nodesToTest))
   {
    j = which(object@nodeSS$node == object@nodesToTest[r])
    LRT[r] = with(object@nodeSS[j,], poisson_llrt(observed, observed_pt, expected, expected_pt))
+   excess[r] = with(object@nodeSS[j,], observed/observed_pt - expected/expected_pt)
   }
+   LRT = applyDirection(object, LRT, excess)
    object@LRT = LRT
    names(object@LRT) = object@nodesToTest
    return(object)

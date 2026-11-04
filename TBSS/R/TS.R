@@ -13,6 +13,7 @@
 #'@slot LRT is a named vector containing the node-specific discrepancy measure computed on the observed data for each node in \code{nodesToTest}.
 #' @slot B is the number of MC replicates used to approximate the null distribution of LRT
 #'@slot LRT_H0 is a \code{matrix} with the MC-distribution of LRT. Each column is an MC replicate.
+#'@slot direction a \code{character} define the direction of the test. For one-side test LRT in the side that is not considered is set to 0 both for the observed data and the ones replicated under the null.
 #' @docType class
 #' @name TS-class
 #' @aliases TS-class TS
@@ -25,7 +26,8 @@ setClass(Class = "TS", slots = c(data = 'data.frame',
                                  nodeSS = 'data.frame',
                                  LRT ='numeric',
                                  B = 'numeric',
-                                 LRT_H0 = 'matrix'))
+                                 LRT_H0 = 'matrix',
+				 direction = 'character'))
 #' Utility functions of the TS class
 #' @description \code{listLeaves()} Populate the slot leaves of TS with a vector of the unique values of the first column of data (leaves ID). 
 #' @param object an object of class TS
@@ -238,3 +240,19 @@ setMethod(f = "summary",
 	  return(retval)
 	  })
 
+
+
+
+#' One-sided restriction of the discrepancy measures
+#' @description \code{applyDirection()} for one sided tests sets to 0 the LRT in the direction that is not considered in the test. For \code{direction == 'positive'} the LRT with \code{excess<=0} are set to 0 while for \code{direction == 'negative'} the LRT with \code{excess>=0} are set to 0. The function is intended to be used within \code{computeLRT()} so the same restriction applies to the observed data and to every Monte Carlo replicate.
+#' @param object an object of class TS
+#' @param LRT a vector of node-specific LRT 
+#' @param excess a vector, of the same length as \code{LRT}, with the node-specific excess (e.g., observed minus expected)
+#' @rdname TS
+applyDirection = function(object, LRT, excess)
+{
+  if(length(object@direction) == 0) return(LRT)
+  if(object@direction == 'positive') LRT[excess <= 0] = 0
+  else if(object@direction == 'negative') LRT[excess >=0] = 0
+  retunr(LRT)
+}

@@ -45,7 +45,7 @@ robustSurvivalTBSS =  function(data,tree, min_events = 1, B = 999, parallel = FA
 
  ## Create appropriate TS object
    myTS = methods::new("robustSurvivalTS", tree = as.data.frame(tree), data = as.data.frame(data), B = B)
-
+   myTS@direction = direction
   ## TBSS analysis
   myTS = mapNodesLeaves(myTS)
   myTS = computeSS(myTS)

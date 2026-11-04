@@ -45,6 +45,7 @@ setMethod("computeLRT", signature(object = "robustSurvivalTS"), function(object)
 
   ## compute LLR for all the nodes
   LRT = numeric(length(object@nodesToTest))
+  excess = numeric(length(object@nodesToTest))
   for(r in 1:length(object@nodesToTest))
   {
    j = which(object@nodeSS$node == object@nodesToTest[r])
@@ -55,10 +56,10 @@ setMethod("computeLRT", signature(object = "robustSurvivalTS"), function(object)
 
 LRT[r] = 2*(object@nodeSS$events_case[j]*(log(object@nodeSS$events_case[j]) - log(object@nodeSS$total_person_time_case[j])) - object@nodeSS$events_case[j] + 
 (object@nodeSS$events_control[j]*(log(object@nodeSS$events_control[j]) - log(object@nodeSS$total_person_time_control[j])) - object@nodeSS$events_control[j]) -(log(lambdaH0)* (object@nodeSS$events_case[j] + object@nodeSS$events_control[j])  - (object@nodeSS$events_case[j] + object@nodeSS$events_control[j])))
-
-
-
+   excess[r] = object@nodeSS$events_case[j]/object@nodeSS$total_person_time_case[j] - object@nodeSS$events_control[j]/object@nodeSS$total_person_time_control[j]
   }
+
+   LRT = applyDirection(object, LRT, excess)
    object@LRT = LRT
    names(object@LRT) = object@nodesToTest
    return(object)
