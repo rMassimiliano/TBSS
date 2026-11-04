@@ -124,8 +124,9 @@ setMethod("H1_gen", signature(object = "unconditionalPoissonTS"),
      object@nodeSS$observed[indx] = stats::rpois(length(indx), object@nodeSS$expected[indx])
 
      ## Alternative leaves
-     indx = which(object@nodeSS$node %in% alternativeLeaves)
-     object@nodeSS$observed[indx] = stats::rpois(length(indx), object@nodeSS$expected[indx]*alternativeParameter)
+     indx = match(alternativeLeaves, object@nodeSS$node)
+     object@nodeSS$observed[indx] = stats::rpois(length(indx), object@nodeSS$expected[indx]*rep_len(alternativeParameter, length(indx)))
+
   
      ## update only the SS for the nodes that are used in the LRT
      ind_set = which(!(object@nodeSS$node%in% leaves_list))

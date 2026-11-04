@@ -63,6 +63,7 @@ if(NCOL(cohort)>5)
 	names(cohort)[7] = 'followupEnd' 
 	fup = TRUE
 }
+if(statistic == 'Cox' & !fup) stop("statistic = 'Cox' requires follow-up time: provide followupStart and followupEnd in the cohort data.")
 cohort = cohort[order(cohort$strata),]
 cohort$patientID = as.character(cohort$patientID)
 cohort$indexDate = as.Date(cohort$indexDate)
@@ -144,9 +145,15 @@ if(verbose) cat(sprintf("Done. \n \n Computation took approximately %.3f seconds
 if(verbose) cat("Applying node-specific washout, this can take some time...")
 
 tim = system.time({
-if('idInNode' %in% names(parsedParameters))
+needed = if(fup) c('idInNode', 'personTime', 'personTimeNotInNode') else 'idInNode'
+if(all(needed %in% names(parsedParameters)))
 {
-myTS@idInNode = parsedParameters$idInNode
+   myTS@idInNode = parsedParameters$idInNode
+   if(fup)
+   {
+    myTS@personTime = parsedParameters$personTime
+    myTS@personTimeNotInNode = parsedParameters$personTimeNotInNode
+   }
 }
 else
 {

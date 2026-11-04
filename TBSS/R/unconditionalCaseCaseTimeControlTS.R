@@ -79,10 +79,10 @@ function (object)
       leaf = object@mapNodesLeaves[[object@nodeSS$node[r]]]
       ind = which(object@data$leaf %in% leaf)
 
-      object@nodeSS$case_reference[r] = sum(object@data$case_reference[ind])
-      object@nodeSS$case_hazard[r] = sum(object@data$case_hazard[ind])
-      object@nodeSS$control_reference[r] = sum(object@data$control_reference[ind])
-      object@nodeSS$control_hazard[r] = sum(object@data$control_hazard[ind])
+      object@nodeSS$case_reference[r] = sum(object@nodeSS$case_reference[ind])
+      object@nodeSS$case_hazard[r] = sum(object@nodeSS$case_hazard[ind])
+      object@nodeSS$control_reference[r] = sum(object@nodeSS$control_reference[ind])
+      object@nodeSS$control_hazard[r] = sum(object@nodeSS$control_hazard[ind])
     }
 
    return(object)

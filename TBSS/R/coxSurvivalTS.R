@@ -39,7 +39,7 @@ setMethod("computeSS", signature(object = "coxSurvivalTS"), function(object)
   	}
 	else
 	{
-		object@nodeSS$HR = NA
+		object@nodeSS$HR[r] = NA
 	}
 
   }

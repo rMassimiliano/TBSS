@@ -50,13 +50,15 @@ evalPower = function(object,
 
 if(parallel)
 {
- cl <- parallel::makeCluster(ncpus)
+ cl = parallel::makeCluster(ncpus)
+ on.exit(parallel::stopCluster(cl), add = TRUE)
+ parallel::clusterSetRNGStream(cl, sample.int(.Machine$integer.max, 1))
  parallel::clusterExport(cl, "do_MC_pow", envir = environment())
  parallel::clusterExport(cl, "object", envir = environment())
- parallel::clusterExport(cl, "alternariveParameter", envir = environment())
+ parallel::clusterExport(cl, "alternativeParameter", envir = environment())
  parallel::clusterExport(cl, "alternativeLeaves", envir = environment())
  T_alternative = parallel::parSapply(cl, 1:R, do_MC_pow)
- parallel::stopCluster(cl)
+ #parallel::stopCluster(cl)
 }
 else
 {

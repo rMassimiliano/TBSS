@@ -11,10 +11,13 @@
 #' @export
 cctcTBSS =  function(case,control,tree,B = 999, parallel = FALSE, ncpus = NULL, nodeToRemove = NULL, seed  = 8277)
 {
+ set.seed(seed)
  ## create data 
  names(case) = c("leaf", "case_reference", "case_hazard")
  names(control) = c("leaf", "control_reference", "control_hazard")
- data = control |> dplyr::left_join(case, by = 'leaf') |> as.data.frame()
+ data = control |> dplyr::full_join(case, by = 'leaf') |> as.data.frame()
+ ## replace NA with 0s (for leaves with only cases or controls)
+ data = data |> dplyr::mutate_at(2:5,\(x) dplyr::coalesce(x,0L))
 
  tree = as.data.frame(tree)
  if(parallel & (length(ncpus) == 0))
@@ -26,6 +29,11 @@ cctcTBSS =  function(case,control,tree,B = 999, parallel = FALSE, ncpus = NULL, 
   myTS = methods::new("unconditionalCaseCaseTimeControlTS", data =data, tree = tree, B =B )
   myTS = mapNodesLeaves(myTS)
   myTS = computeSS(myTS)
+  ## Remove user specified node
+  if(!is.null(nodeToRemove))
+  {
+   myTS@nodesToTest = setdiff(myTS@nodesToTest, nodeToRemove) 
+  }
   myTS = computeLRT(myTS)
   myTS = monteCarlo(myTS, parallel, ncpus)
 
