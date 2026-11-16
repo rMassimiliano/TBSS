@@ -4,8 +4,7 @@
 #' @param expected number of events for the second Poisson
 uncon_poisson_llrt =function (observed,expected)
 {
- # res =   dpois(observed,observed, log = TRUE) - dpois(observed,expected, log = TRUE)
-   if(observed==0){return(-expected)}
+   if(observed==0){return(expected)}
    res = expected - observed + observed*(log(observed) - log(expected)  )
    return(res)
 }
@@ -18,7 +17,6 @@ uncon_poisson_llrt =function (observed,expected)
 #' @param expected_pt time reference (or person time) for the second Poisson
 poisson_llrt =function (observed, observed_pt, expected, expected_pt)
 {
- # res =   dpois(observed,observed, log = TRUE) - dpois(observed,expected, log = TRUE)
    tot = (expected + observed)
    l0 = tot/(observed_pt + expected_pt)
 

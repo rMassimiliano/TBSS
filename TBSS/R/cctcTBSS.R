@@ -29,6 +29,7 @@ cctcTBSS =  function(case,control,tree,B = 999, parallel = FALSE, ncpus = NULL, 
   myTS = methods::new("unconditionalCaseCaseTimeControlTS", data =data, tree = tree, B =B )
   myTS = mapNodesLeaves(myTS)
   myTS = computeSS(myTS)
+  myTS@nodesToTest = myTS@nodeSS$node
   ## Remove user specified node
   if(!is.null(nodeToRemove))
   {

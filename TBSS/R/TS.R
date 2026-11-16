@@ -194,7 +194,7 @@ else
 	## non-parallel version
  boot_LRT =  sapply(1:object@B, do_MC)
 }
-
+ if(!is.matrix(boot_LRT)) boot_LRT = matrix(boot_LRT, nrow = 1) ## exception for testing one single node 
  object@LRT_H0 = boot_LRT
  return(object)
 }

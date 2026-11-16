@@ -8,38 +8,44 @@ setClass(Class = "coxSurvivalTS",  contains = 'permutationPoissonTS')
 #' @rdname permutationPoissonTS
 setMethod("computeSS", signature(object = "coxSurvivalTS"), function(object)
 {
-  object@nodeSS = data.frame(node = names(object@mapNodesLeaves), observed = 0L, observed_pt = 1L, expected = 0L, expected_pt = 1L, HR = 0L)
+  object@nodeSS = data.frame(node = names(object@mapNodesLeaves), observed = 0L, observed_pt = 1L, expected = 0L, expected_pt = 1L, HR = 0L, LRT = 0L)
 
   for(r in 1:length(object@mapNodesLeaves))
   {
 
+   d = object@idInNode[[r]]
+   p = object@personTime[[r]]
+   q = object@personTimeNotInNode[[r]]
+
    object@nodeSS$node[r]     = names(object@mapNodesLeaves)[r]
    object@nodeSS$observed[r] = sum(object@idInNode[[r]]$weight*(object@idInNode[[r]]$exposure == 1))
    object@nodeSS$expected[r] = sum( object@idInNode[[r]]$weight* (object@idInNode[[r]]$exposure == 0))
-    ## combine person time for censored and not in node
-    combined_pt = rbind(object@personTime[[r]], object@personTimeNotInNode[[r]])
 
-    object@nodeSS$expected_pt[r] = with(dplyr::filter(object@idInNode[[r]],.data$exposure == 0), sum(weight*followup)) + with(dplyr::filter(combined_pt,.data$exposure == 0), sum(weight*followup)) 
+   object@nodeSS$expected_pt[r] = sum((d$weight*d$followup)[d$exposure == 0]) + sum((p$weight*p$followup)[p$exposure == 0]) + sum((q$weight*q$followup)[q$exposure == 0])
 
-    object@nodeSS$observed_pt[r] =  with(dplyr::filter(object@idInNode[[r]],.data$exposure == 1), sum(weight*followup)) + with(dplyr::filter(combined_pt,.data$exposure == 1), sum(weight*followup)) 
-   
+   object@nodeSS$observed_pt[r] = sum((d$weight*d$followup)[d$exposure == 1]) + sum((p$weight*p$followup)[p$exposure == 1]) + sum((q$weight*q$followup)[q$exposure == 1])
+
     ## estimate cox model
 
-	t2 = object@idInNode[[r]] |> dplyr::select(.data$patientID,.data$followup,.data$exposure,.data$weight) |> dplyr::mutate(status=1)  |> dplyr::rename(time =  .data$followup)
-  	t1 = object@personTime[[r]] |> dplyr::select(.data$patientID,.data$followup,.data$exposure,.data$weight)|> dplyr::mutate(status = 0)|> dplyr::rename(time =.data$followup)
-  	t3 = object@personTimeNotInNode[[r]] |> dplyr::select(.data$patientID,.data$followup,.data$exposure,.data$weight)|> dplyr::mutate(status = 0)|> dplyr::rename(time =.data$followup)
-  
-  	tmpData  = rbind(t1,t2,t3)  
+    tmpData  = data.frame(time = c(p$followup, d$followup, q$followup),
+                          exposure = c(p$exposure, d$exposure, q$exposure),
+                          weight = c(p$weight, d$weight, q$weight),
+                          status = rep(c(0, 1, 0), c(NROW(p), NROW(d), NROW(q))))
+
+   
+    ## estimate cox model
   
   	if(NROW(tmpData)>2)
   	{
   		cmod = survival::coxph(survival::Surv(time,status)~exposure, weight = tmpData$weight, data = tmpData, ties = "breslow")
 		object@nodeSS$HR[r] = exp(cmod$coef[[1]])
+		object@nodeSS$LRT[r] = -2 * (cmod$loglik[1] - cmod$loglik[2])
   
   	}
 	else
 	{
 		object@nodeSS$HR[r] = NA
+		object@nodeSS$LRT[r] = NA
 	}
 
   }
@@ -59,28 +65,17 @@ setMethod("computeLRT", signature(object = "coxSurvivalTS"), function(object) {
   if(length(object@nodeSS) == 0) object = computeSS(object)
   if(length(object@nodesToTest) == 0) object@nodesToTest = names(object@mapNodesLeaves)
 
-  d = length(object@nodesToTest)
-  LRT = numeric(d)
-  coefs = numeric(d)
-  coxTBSS = data.frame(node = character(d), coef = numeric(d), LRT = numeric(d))
+  ## this is pre-compute in the sufficient statistic node. 
+  L = length(object@nodesToTest)
+  LRT = numeric(L)
+  coefs = numeric(L)
   i=1
   for(node in object@nodesToTest)
   {
-  	coxTBSS$node[i] = node
-  	t2 = object@idInNode[[node]] |> dplyr::select(.data$patientID,.data$followup,.data$exposure,.data$weight) |> dplyr::mutate(status=1)  |> dplyr::rename(time = .data$followup)
-  	t1 = object@personTime[[node]] |> dplyr::select(.data$patientID, .data$followup, .data$exposure, .data$weight)|> dplyr::mutate(status = 0)|> dplyr::rename(time = .data$followup)
-  	t3 = object@personTimeNotInNode[[node]] |> dplyr::select(.data$patientID,.data$followup,.data$exposure,.data$weight)|> dplyr::mutate(status = 0)|> dplyr::rename(time = .data$followup)
-  
-  
-  	tmpData  = rbind(t1,t2,t3)  
-  
-  	if(NROW(tmpData)>2)
-  	{
-  		cmod = survival::coxph(survival::Surv(time,status)~exposure, weight = tmpData$weight, data = tmpData, ties = "breslow")
-  		LRT[i] = -2 * (cmod$loglik[1] - cmod$loglik[2])
-          	coefs[i] = cmod$coef[[1]]
-  	}
-  	i=i+1
+   j = match(node,object@nodeSS$node)
+   LRT[i] = object@nodeSS$LRT[j]
+   coefs[i] = log(object@nodeSS$HR[j])
+   i=i+1
   }
 
    LRT = applyDirection(object, LRT, coefs)

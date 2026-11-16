@@ -63,7 +63,6 @@ if(NCOL(cohort)>5)
 	fup = TRUE
 }
 if(statistic == 'Cox' & !fup) stop("statistic = 'Cox' requires follow-up time: provide followupStart and followupEnd in the cohort data.")
-cohort = cohort[order(cohort$strata),]
 cohort$patientID = as.character(cohort$patientID)
 cohort$indexDate = as.Date(cohort$indexDate)
 ## scale weights

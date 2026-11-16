@@ -16,18 +16,18 @@ setMethod("computeSS", signature(object = "permutationPoissonTS"), function(obje
 
   for(r in 1:length(object@mapNodesLeaves))
   {
-
+   d = object@idInNode[[r]]
    object@nodeSS$node[r]     = names(object@mapNodesLeaves)[r]
-   object@nodeSS$observed[r] = sum(object@idInNode[[r]]$weight*(object@idInNode[[r]]$exposure == 1))
-   object@nodeSS$expected[r] = sum( object@idInNode[[r]]$weight* (object@idInNode[[r]]$exposure == 0))
+   object@nodeSS$observed[r] = sum(d$weight*(d$exposure == 1))
+   object@nodeSS$expected[r] = sum( d$weight*(d$exposure == 0))
    if(object@fup)
    {
     ## combine person time for censored and not in node
-    combined_pt = rbind(object@personTime[[r]], object@personTimeNotInNode[[r]])
 
-    object@nodeSS$expected_pt[r] = with(dplyr::filter(object@idInNode[[r]],.data$exposure == 0), sum(weight*followup)) + with(dplyr::filter(combined_pt,.data$exposure == 0), sum(weight*followup)) 
-
-    object@nodeSS$observed_pt[r] =  with(dplyr::filter(object@idInNode[[r]],.data$exposure == 1), sum(weight*followup)) + with(dplyr::filter(combined_pt,.data$exposure == 1), sum(weight*followup)) 
+     p = object@personTime[[r]] 
+     q = object@personTimeNotInNode[[r]]
+     object@nodeSS$expected_pt[r] = sum((d$weight*d$followup)[d$exposure == 0]) + sum((p$weight*p$followup)[p$exposure == 0]) + sum((q$weight*q$followup)[q$exposure == 0])
+    object@nodeSS$observed_pt[r] = sum((d$weight*d$followup)[d$exposure == 1]) + sum((p$weight*p$followup)[p$exposure == 1]) + sum((q$weight*q$followup)[q$exposure == 1])
    }
 
   }
@@ -71,32 +71,33 @@ function (object)
     ## generate the leaves data under H0
 
 	## it is ordered by strata
-  permuted_cohort = object@cohort |> dplyr::select(.data$patientID,.data$strata) |>  dplyr::group_by(.data$strata) |> dplyr::slice_sample(prop = 1)
+  #permuted_cohort = object@cohort |> dplyr::select(.data$patientID,.data$strata) |>  dplyr::group_by(.data$strata) |> dplyr::slice_sample(prop = 1)
 
  ## cohort is ordered by strata so this change allocation but not structure since the PatientId are permuted withing the strata
- permuted_cohort$exposure = object@cohort$exposure
- permuted_cohort$weight = object@cohort$weight
+ #permuted_cohort$exposure = object@cohort$exposure
+ #permuted_cohort$weight = object@cohort$weight
+ 
+  perm = seq_len(NROW(object@cohort))
+  perm[order(object@cohort$strata)] = order(object@cohort$strata, stats::runif(NROW(object@cohort))) ## use a random order within strata
+  permuted_cohort = data.frame(patientID = object@cohort$patientID[perm], exposure = object@cohort$exposure, weight = object@cohort$weight)
 
      ## update node that have to be tested
      for(j in 1:length(object@nodesToTest))
      {
         r = which(names(object@idInNode) == object@nodesToTest[j])
      ## change exposure and weights for the SS order is given by nodes in idNode
-     tmp_cohort = permuted_cohort[permuted_cohort$patientID %in% object@idInNode[[r]]$patientID,]
-
-        object@idInNode[[r]]$exposure  = tmp_cohort$exposure
-        object@idInNode[[r]]$weight =   tmp_cohort$weight
+ 	m = match(object@idInNode[[r]]$patientID, permuted_cohort$patientID)
+        object@idInNode[[r]]$exposure = permuted_cohort$exposure[m]
+        object@idInNode[[r]]$weight   = permuted_cohort$weight[m]
       if(object@fup)
       {
-        tmp_cohort = permuted_cohort[permuted_cohort$patientID %in% object@personTime[[r]]$patientID,]
-      	object@personTime[[r]]$exposure =tmp_cohort$exposure
-      	object@personTime[[r]]$weight = tmp_cohort$weight
-        object@personTime[[r]]$wft = with(object@personTime[[r]], weight*followup)
+        m = match(object@personTime[[r]]$patientID, permuted_cohort$patientID)
+        object@personTime[[r]]$exposure = permuted_cohort$exposure[m]
+        object@personTime[[r]]$weight   = permuted_cohort$weight[m]
 
-        tmp_cohort = permuted_cohort[permuted_cohort$patientID %in% object@personTimeNotInNode[[r]]$patientID,]
-      	object@personTimeNotInNode[[r]]$exposure =tmp_cohort$exposure
-      	object@personTimeNotInNode[[r]]$weight = tmp_cohort$weight
-        object@personTimeNotInNode[[r]]$wft = with(object@personTimeNotInNode[[r]], weight*followup)
+        m = match(object@personTimeNotInNode[[r]]$patientID, permuted_cohort$patientID)
+        object@personTimeNotInNode[[r]]$exposure = permuted_cohort$exposure[m]
+        object@personTimeNotInNode[[r]]$weight   = permuted_cohort$weight[m]
       }
      }
      ## compute SS 
