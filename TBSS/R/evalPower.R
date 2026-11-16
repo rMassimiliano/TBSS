@@ -7,6 +7,7 @@
 #' @param R is the number of dataset simulated under the alternative and used to estimate the power. 
 #' @param parallel if \code{TRUE} parallel computing is used to compute the bootstrap p-values.
 #' @param ncpus number of cpus used if \code{parallel = TRUE}. If no value is provided set to  \code{ncpus = detectCores() - 1}.
+#'@param seed a number indicating the seed used for the analysis, i.e., the input of \code{set.seed()}. Default \code{seed  = NULL} is no seed.
 #' @export
 #' @examples
 #' library(TBSS)
@@ -25,9 +26,10 @@ evalPower = function(object,
 		     alpha = 0.05,
 		     R =1000,
                      parallel = FALSE,
-                     ncpus = NULL)
+                     ncpus = NULL,
+		     seed = NULL)
 {
-
+ if(!is.null(seed)) set.seed(seed)
  if(parallel & (length(ncpus) == 0))
  {
   ncpus = parallel::detectCores() - 1

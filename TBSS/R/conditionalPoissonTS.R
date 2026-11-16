@@ -66,6 +66,41 @@ function(object)
     return(object)
 }
 )
+#' Data under an alternative model
+#' @description \code{H1_gen()} generate data under a specific alternative model, conditional on the total number of observed events.  The expected counts of the \code{alternativeLeaves} are multiplied by \code{alternativeParameter}. Events are generated from  a multinomial distribution.
+#' @param object an object of class TS
+#' @param alternativeParameter relative risk(s) used for the leaves under the alternative
+#' @param alternativeLeaves leaves under the alternative model
+#' @rdname conditionalPoissonTS 
+setMethod("H1_gen", signature(object = "conditionalPoissonTS"),
+function(object, alternativeParameter, alternativeLeaves)
+{
+
+  TOTAL_OBSERVED = sum(object@data$observed)
+  ## generate the leaves data under H1
+  leaves_list = object@leaves   
+
+  indx = which(object@nodeSS$node %in% leaves_list)
+  ## relative risk of each leaf: 1 under the null, alternativeParameter for the alternative leaves
+  rr = rep(1, length(indx))
+  alt = match(alternativeLeaves, object@nodeSS$node[indx])
+  rr[alt] = rep_len(alternativeParameter, length(alt))
+  probs =  object@nodeSS$expected[indx]*rr/sum(object@nodeSS$expected[indx]*rr)
+
+  object@nodeSS$observed[indx] =    stats::rmultinom(1,size = TOTAL_OBSERVED, prob = probs)
+  
+     ## update only the SS for the nodes that are used in the LRT
+  ind_set = which(!(object@nodeSS$node%in% leaves_list))
+  ind_set = ind_set[which(object@nodeSS$node[ind_set] %in% object@nodesToTest)]
+   for(r in ind_set)
+   {
+    leaf = object@mapNodesLeaves[[object@nodeSS$node[r]]]
+    object@nodeSS$observed[r] =  sum(object@nodeSS$observed[object@nodeSS$node %in% leaf])
+      object@nodeSS$expected[r] =  sum(object@nodeSS$expected[object@nodeSS$node %in% leaf])
+    }
+    return(object)
+}
+)
 
 
 #' Summary method
