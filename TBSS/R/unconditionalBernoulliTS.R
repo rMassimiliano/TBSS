@@ -15,8 +15,6 @@ setMethod("computeSS", signature(object = "unconditionalBernoulliTS"), function(
 
   for(r in 1:length(object@mapNodesLeaves))
   {
-   #ind = which(object@data$leaf %in% object@mapNodesLeaves[[r]])
-
    ind = which(object@leaves %in% object@mapNodesLeaves[[r]])
    object@nodeSS$node[r]     = names(object@mapNodesLeaves)[r]
    object@nodeSS$case[r]     =  sum(object@data$case[ind])
@@ -38,9 +36,10 @@ setMethod("computeLRT", signature(object = "unconditionalBernoulliTS"), function
 
   ## compute LLR for all the nodes
   LRT = numeric(length(object@nodesToTest))
+  j_inds = match(object@nodesToTest, object@nodeSS$node) ## row of nodeSS for each tested node, computed outide the loop
   for(r in 1:length(object@nodesToTest))
   {
-   j = which(object@nodeSS$node == object@nodesToTest[r])
+   j = j_inds[r]
    LRT[r] =  uncon_bernoulli_llrt(object@nodeSS$case[j],object@nodeSS$control[j],object@p)
   }
    names(LRT) = object@nodesToTest

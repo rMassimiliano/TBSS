@@ -46,9 +46,10 @@ setMethod("computeLRT", signature(object = "robustSurvivalTS"), function(object)
   ## compute LLR for all the nodes
   LRT = numeric(length(object@nodesToTest))
   excess = numeric(length(object@nodesToTest))
+  j_inds = match(object@nodesToTest, object@nodeSS$node) ## row of nodeSS for each tested node, computed outide the loop
   for(r in 1:length(object@nodesToTest))
   {
-   j = which(object@nodeSS$node == object@nodesToTest[r])
+   j = j_inds[r]
 
   # LRT[r] = abs((log(object@nodeSS$events_case[j]) - log(object@nodeSS$total_person_time_case[j]) - (log(object@nodeSS$events_control[j]) - log(object@nodeSS$total_person_time_control[j])))/sqrt(1/object@nodeSS$events_case[j] + 1/object@nodeSS$events_control[j]))
   lambdaH0 = (object@nodeSS$events_case[j] + object@nodeSS$events_control[j])/

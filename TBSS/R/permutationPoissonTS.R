@@ -50,9 +50,10 @@ setMethod("computeLRT", signature(object = "permutationPoissonTS"), function(obj
   ## compute LLR for all the nodes
   LRT = numeric(length(object@nodesToTest))
   excess = numeric(length(object@nodesToTest))
+  j_inds = match(object@nodesToTest, object@nodeSS$node) ## row of nodeSS for each tested node, computed outide the loop
   for(r in 1:length(object@nodesToTest))
   {
-   j = which(object@nodeSS$node == object@nodesToTest[r])
+   j = j_inds[r]
    LRT[r] = with(object@nodeSS[j,], poisson_llrt(observed, observed_pt, expected, expected_pt))
    excess[r] = with(object@nodeSS[j,], observed/observed_pt - expected/expected_pt)
   }
@@ -100,7 +101,16 @@ function (object)
         object@personTimeNotInNode[[r]]$weight   = permuted_cohort$weight[m]
       }
      }
-     ## compute SS 
+     ## compute SS  --- only for nodes to be tested
+     object@mapNodesLeaves = object@mapNodesLeaves[object@nodesToTest]
+     object@idInNode = object@idInNode[object@nodesToTest]
+     if(object@fup)
+     {
+      object@personTime = object@personTime[object@nodesToTest]
+      object@personTimeNotInNode = object@personTimeNotInNode[object@nodesToTest]
+     }
+     object = computeSS(object)
+
      object = computeSS(object)
     return(object)
    }
