@@ -166,32 +166,18 @@ if(verbose) cat(sprintf("Done. \n\n Computation took approximately %.3f seconds 
 
 myTS = computeSS(myTS) 
 ## Remove nodes with a number of events lower than min_events 
-   if(direction == 'positive')
-   {
-  myTS@nodesToTest = myTS@nodeSS$node[(myTS@nodeSS$observed >= min_events) & ((myTS@nodeSS$observed/myTS@nodeSS$observed_pt - myTS@nodeSS$expected/myTS@nodeSS$expected_pt)>0) & (myTS@nodeSS$expected>0)]
-   }
-   else if (direction == 'negative')
-   {
-     myTS@nodesToTest = myTS@nodeSS$node[(myTS@nodeSS$observed >= min_events) & ((myTS@nodeSS$observed/myTS@nodeSS$observed_pt - myTS@nodeSS$expected/myTS@nodeSS$expected_pt)<0 &(myTS@nodeSS$expected>0) )]
-   }
-   else
-   {
-     myTS@nodesToTest = myTS@nodeSS$node[(myTS@nodeSS$observed >= min_events) & (myTS@nodeSS$expected>0)] 
-   }
+myTS@nodesToTest = myTS@nodeSS$node[(myTS@nodeSS$observed >= min_events) & (myTS@nodeSS$expected>0)] 
 
-  ## Remove user specified node
-  if(!is.null(nodeToRemove))
-  {
-   myTS@nodesToTest = setdiff(myTS@nodesToTest,nodeToRemove) 
-  }
-  if(length(myTS@nodesToTest) == 0) stop("No outcome node to be tested after removing nodes from the list for min_events conditions and explicitely with nodeToRemove.")
+## Remove user specified node
+if(!is.null(nodeToRemove))
+{
+ myTS@nodesToTest = setdiff(myTS@nodesToTest,nodeToRemove) 
+}
+if(length(myTS@nodesToTest) == 0) stop("No outcome node to be tested after removing nodes from the list for min_events conditions and explicitely with nodeToRemove.")
 
 myTS = computeLRT(myTS) 
 
-
-
 ## perform MC
-
 if(verbose) cat("Starting permutation algorithm...")
 tim = system.time({myTS = monteCarlo(myTS, parallel, ncpus)})
 if(verbose) cat(sprintf("Done. \n\n Computation took approximately %.3f seconds \n\n\n", tim[3]))

@@ -56,19 +56,7 @@ poissonSurvivalTBSS =  function(data,tree, min_events = 1, B = 999, parallel = F
   myTS = computeSS(myTS)
 
   ## Remove nodes with a number of events lower than min_events 
-  excess = with(myTS@nodeSS, events_case/total_person_time_case - events_control/total_person_time_control)
-   if(direction == 'positive')
-   {
-    myTS@nodesToTest = myTS@nodeSS$node[(myTS@nodeSS$events_case >= min_events) & (excess>0) & (myTS@nodeSS$events_control>0)]
-   }
-   else if (direction == 'negative')
-   {
-     myTS@nodesToTest = myTS@nodeSS$node[(myTS@nodeSS$events_case >= min_events) & ( ( excess<0) &(myTS@nodeSS$events_control>0) )] 
-   }
-   else
-   {
-     myTS@nodesToTest = myTS@nodeSS$node[(myTS@nodeSS$events_case >= min_events) & (myTS@nodeSS$events_control>0)] 
-   }
+  myTS@nodesToTest = myTS@nodeSS$node[(myTS@nodeSS$events_case >= min_events) & (myTS@nodeSS$events_control>0)] 
 
   ## Remove user specified node
   if(!is.null(nodeToRemove))
