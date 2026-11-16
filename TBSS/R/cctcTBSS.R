@@ -35,6 +35,7 @@ cctcTBSS =  function(case,control,tree,B = 999, parallel = FALSE, ncpus = NULL, 
   {
    myTS@nodesToTest = setdiff(myTS@nodesToTest, nodeToRemove) 
   }
+  if(length(myTS@nodesToTest) == 0) stop("No outcome node to be tested after removing nodes from the list for min_events conditions and explicitely with nodeToRemove.")
   myTS = computeLRT(myTS)
   myTS = monteCarlo(myTS, parallel, ncpus)
 

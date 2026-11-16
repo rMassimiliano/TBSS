@@ -16,8 +16,9 @@ setMethod("computeLRT", signature(object = "conditionalPoissonTS"), function(obj
   if(length(object@nodesToTest) == 0) object@nodesToTest = names(object@mapNodesLeaves)
 
   ## compute LLR for all the nodes
-  TOTAL_EXPECTED = sum(object@data$expected)
-  TOTAL_OBSERVED = sum(object@data$observed)
+  leaves_ind = object@nodeSS$node %in% object@leaves
+  TOTAL_EXPECTED = sum(object@nodeSS$expected[leaves_ind])
+  TOTAL_OBSERVED = sum(object@nodeSS$observed[leaves_ind])
 
   LRT = numeric(length(object@nodesToTest))
   excess = numeric(length(object@nodesToTest))

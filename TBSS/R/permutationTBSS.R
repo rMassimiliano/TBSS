@@ -38,9 +38,12 @@
 #' summary(mod_tbss) |> head()
 permutationTBSS = function(cohort, diagnosis_table,tree, min_events = 2, B = 999, parallel = FALSE, ncpus = NULL, nodeToRemove = NULL,washout_window = NULL, direction = 'positive', offset = "unscaled", statistic = 'Poisson', seed  = 8277, parsedParameters = NULL, verbose = TRUE, relative = TRUE)
 {
-match.arg(offset, c("sum_of_weights", "unscaled"))
-match.arg(statistic, c("Poisson", "Cox"))
 set.seed(seed)
+offset = match.arg(offset, c("sum_of_weights", "unscaled"))
+statistic = match.arg(statistic, c("Poisson", "Cox"))
+## stop if the direction is not among the possibilities
+if(!(direction %in% c("positive","all","negative"))) stop("direction should be 'positive', 'all', or 'negative'. Refer to the help for details.")
+
 ## stop if the parameter min_events is smaller than 2 or negative 
 if(min_events < 2) stop("min_events should be a number greater than 2.")
 
@@ -181,6 +184,7 @@ myTS = computeSS(myTS)
   {
    myTS@nodesToTest = setdiff(myTS@nodesToTest,nodeToRemove) 
   }
+  if(length(myTS@nodesToTest) == 0) stop("No outcome node to be tested after removing nodes from the list for min_events conditions and explicitely with nodeToRemove.")
 
 myTS = computeLRT(myTS) 
 

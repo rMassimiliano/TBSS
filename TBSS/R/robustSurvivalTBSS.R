@@ -70,6 +70,7 @@ robustSurvivalTBSS =  function(data,tree, min_events = 1, B = 999, parallel = FA
   {
    myTS@nodesToTest = setdiff(myTS@nodesToTest, nodeToRemove) 
   }
+  if(length(myTS@nodesToTest) == 0) stop("No outcome node to be tested after removing nodes from the list for min_events conditions and explicitely with nodeToRemove.")
 
   ## compute node-specific discrepancies and their distribution under the null
   myTS = computeLRT(myTS)

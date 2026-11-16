@@ -45,7 +45,7 @@ for(r in 1:length(object@mapNodesLeaves))
         fups = tapply(tmp$time, tmp$patientID,min)
         fups = data.frame(patientID = names(fups), followup = fups)
         ## happening the same day event time 0.5 days
-        fups[fups==0] = 0.5
+        fups$followup[fups$followup==0] = 0.5
     }
     else
     {
