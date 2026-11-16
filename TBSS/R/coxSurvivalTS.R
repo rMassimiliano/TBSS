@@ -12,10 +12,9 @@ setMethod("computeSS", signature(object = "coxSurvivalTS"), function(object)
 
   for(r in 1:length(object@mapNodesLeaves))
   {
-
-   d = object@idInNode[[r]]
-   p = object@personTime[[r]]
-   q = object@personTimeNotInNode[[r]]
+   d = object@idInNode[[names(object@mapNodesLeaves)[r]]]
+   p = object@personTime[[names(object@mapNodesLeaves)[r]]]
+   q = object@personTimeNotInNode[[names(object@mapNodesLeaves)[r]]]
 
    object@nodeSS$node[r]     = names(object@mapNodesLeaves)[r]
    object@nodeSS$observed[r] = sum(object@idInNode[[r]]$weight*(object@idInNode[[r]]$exposure == 1))

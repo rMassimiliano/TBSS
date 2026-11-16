@@ -16,16 +16,15 @@ setMethod("computeSS", signature(object = "permutationPoissonTS"), function(obje
 
   for(r in 1:length(object@mapNodesLeaves))
   {
-   d = object@idInNode[[r]]
+   d = object@idInNode[[names(object@mapNodesLeaves)[r]]]
    object@nodeSS$node[r]     = names(object@mapNodesLeaves)[r]
    object@nodeSS$observed[r] = sum(d$weight*(d$exposure == 1))
    object@nodeSS$expected[r] = sum( d$weight*(d$exposure == 0))
    if(object@fup)
    {
     ## combine person time for censored and not in node
-
-     p = object@personTime[[r]] 
-     q = object@personTimeNotInNode[[r]]
+     p = object@personTime[[names(object@mapNodesLeaves)[r]]] 
+     q = object@personTimeNotInNode[[names(object@mapNodesLeaves)[r]]]
      object@nodeSS$expected_pt[r] = sum((d$weight*d$followup)[d$exposure == 0]) + sum((p$weight*p$followup)[p$exposure == 0]) + sum((q$weight*q$followup)[q$exposure == 0])
     object@nodeSS$observed_pt[r] = sum((d$weight*d$followup)[d$exposure == 1]) + sum((p$weight*p$followup)[p$exposure == 1]) + sum((q$weight*q$followup)[q$exposure == 1])
    }
@@ -85,7 +84,7 @@ function (object)
      ## update node that have to be tested
      for(j in 1:length(object@nodesToTest))
      {
-        r = which(names(object@idInNode) == object@nodesToTest[j])
+	r = object@nodesToTest[j] 
      ## change exposure and weights for the SS order is given by nodes in idNode
  	m = match(object@idInNode[[r]]$patientID, permuted_cohort$patientID)
         object@idInNode[[r]]$exposure = permuted_cohort$exposure[m]

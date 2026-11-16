@@ -7,7 +7,7 @@
 #' @param B number of Monte Carlo (i.e., permutations) replicates. The default is \code{B = 999}.
 #' @param parallel if \code{parallel = TRUE} parallel computing is used to compute the Monte Carlo p-values.
 #' @param ncpus number of cpus used if \code{parallel = TRUE}. If no value is provided, the default is \code{ncpus = detectCores() - 1}.
-#'@param direction can be either \code{'positive'}, \code{"negative"} or, \code{"all"} by default (\code{direction = 'positive'}) poissonTBSS only look at nodes where the number of expected cases is larger than the number of observed cases, or equivalently the excess of cases is positive. Setting  \code{direction = '"all"'} test all nodes, while \code{direction  = "negative"} only node with negative excess of cases.
+#'@param direction can be either \code{'positive'}, \code{"negative"} or \code{"all"}. By default (\code{direction = 'positive'}), the LRT of the nodes where the observed number of cases (or rate) is not larger than the expected one is set to 0. The restriction is applied in the same way to the observed data and to every Monte Carlo replicate. Setting \code{direction = "all"} tests all nodes, while \code{direction = "negative"} only considers nodes where the observed number of cases (or rate) is not smaller than the expected
 #'@param nodeToRemove a character vector with user-specified nodes to be removed from the analysis.  Note that sufficient statistics for these nodes are computed, but they are excluded from the testing procedure. By removing nodes from the list of tests, power can increase because of the decreased number of hypotheses that are tested. This list should be specified before running the analysis.  
 #'@param washout_window  a numeric vector with two negative numbers that indicate the length  of the washout window relative to the index data. For example, if washout_window = c(-180,-1) all diagnosis events that occurred in the 180 days (including days -180 and -1)  before the index are used for washout. The default is \code{washout_window = NULL} indicating that all events before the index date (excluded) are used for washout.
 #'@param offset  indicate how expected counts are scaled to be compared with observed counts. Possible values include "sum_of_weights" indicating that expected counts are scaled with  (N weighted total exposed / N weighted total comparator) and "unscaled" for no scaling. Alternative scaling can be used by directly scaling the weights in the cohort file, and using the "unscaled" option for offset. By default no scaling is applied.
@@ -45,7 +45,7 @@ statistic = match.arg(statistic, c("Poisson", "Cox"))
 if(!(direction %in% c("positive","all","negative"))) stop("direction should be 'positive', 'all', or 'negative'. Refer to the help for details.")
 
 ## stop if the parameter min_events is smaller than 2 or negative 
-if(min_events < 2) stop("min_events should be a number greater than 2.")
+if(min_events < 2) stop("min_events should be a number greater than or equal to 2.")
 
  tree = as.data.frame(tree)
 
@@ -64,7 +64,14 @@ if(NCOL(cohort)>5)
 	names(cohort)[6] = 'followupStart' 
 	names(cohort)[7] = 'followupEnd' 
 	fup = TRUE
+
+## check that there are no inconsistencies in the definition of followup
+if(anyNA(cohort$followupStart) | anyNA(cohort$followupEnd)) stop("followupStart and followupEnd cannot contain missing values.")
+if(any(cohort$followupEnd < cohort$followupStart)) stop("followupEnd should not be smaller than followupStart  (no negative length of the follow-up).")
+if(!is.null(washout_window) && any(washout_window[2] >= cohort$followupStart)) warning("washout_window overlaps the follow-up of some patients: their events in the overlap are used both for the washout and in the analysis.")
 }
+
+
 if(statistic == 'Cox' & !fup) stop("statistic = 'Cox' requires follow-up time: provide followupStart and followupEnd in the cohort data.")
 cohort$patientID = as.character(cohort$patientID)
 cohort$indexDate = as.Date(cohort$indexDate)
@@ -156,6 +163,8 @@ if(all(needed %in% names(parsedParameters)))
     myTS@personTime = parsedParameters$personTime
     myTS@personTimeNotInNode = parsedParameters$personTimeNotInNode
    }
+   lists = if(fup) list(myTS@idInNode, myTS@personTime, myTS@personTimeNotInNode) else list(myTS@idInNode)
+   if(!all(sapply(lists, \(x) all(names(myTS@mapNodesLeaves) %in% names(x))))) stop("parsedParameters: idInNode, personTime and personTimeNotInNode should be lists named by the nodes of the tree, as returned by applyNodeSpecificWashout().")
 }
 else
 {

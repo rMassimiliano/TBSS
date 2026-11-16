@@ -34,6 +34,7 @@ setClass(Class = "TS", slots = c(data = 'data.frame',
 #' @rdname TS
 listLeaves = function(object)
 {
+ if(anyNA(object@data[,1])) stop("The first column of the data (leaf) contains missing values.")
  object@leaves =  unique(object@data[,1])
  return(object)
 }

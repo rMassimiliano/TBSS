@@ -18,7 +18,7 @@ setMethod("computeSS", signature(object = "robustSurvivalTS"), function(object, 
 
   for(r in 1:length(object@mapNodesLeaves))
   {
-   ind = which(object@leaves %in% object@mapNodesLeaves[[r]])
+   ind = which(object@data[,1] %in% object@mapNodesLeaves[[r]])
 
    object@nodeSS$node[r]     = names(object@mapNodesLeaves)[r]
    

@@ -9,7 +9,7 @@
 #' If \code{object@fup = TRUE}, that is to say we are accounting for person time, other two named list \code{personTime} and \code{personTimeNotInNode} are also included in the output. 
 #' The \code{personTime} includes the total person time, in days, for the exposed and comparator groups.
 #'The person time is weighted using the weight provided in the cohort file. In case an event happens the same day as the index date, we assume that the event after 1/2 a day. 
-#'Patients excluded from the washout procedure are "censored" rather than excluded from the analysis, hence their person time counts. For "censored" patients we consider as person time the length of the follow-up. 
+#' Patients excluded from the washout procedure are "censored" rather than excluded from the analysis, hence their person-time counts. For "censored" patients, we censor their time at the first occurring event or the length of follow-up if they experience no events.
 #'\code{personTimeNotInNode} includes person time for all the individuals that did not experienced that node event.
 #' @references
 #'Russo, M., Sreedhara, S.K., Smith, J., Davis, S.E., Maro, J.C., Deramus, T., Lii, J., Yang, J., Desai, R.J., Hernández-Muñoz, J.J. and Ma, Y., 2026. Electronic health record-enhanced signal detection using tree-based scan statistic methods. American Journal of Epidemiology, 195(1), pp.178-187.
@@ -42,7 +42,7 @@ for(r in 1:length(object@mapNodesLeaves))
         tmp =  inputData[inputData$patientID %in% retval[[r]]$patientID,]
         tmp = tmp[tmp$leaf %in% object@mapNodesLeaves[[r]],]
         ## use shorter event time certain node
-        fups = tapply(tmp$time, tmp$patientID,min)
+        fups = tapply(tmp$time - tmp$followupStart, tmp$patientID,min)
         fups = data.frame(patientID = names(fups), followup = fups)
         ## happening the same day event time 0.5 days
         fups$followup[fups$followup==0] = 0.5
@@ -58,9 +58,9 @@ for(r in 1:length(object@mapNodesLeaves))
 
     if(NROW(tmp2)>0)
     {
-    ## followup-for censored individuals
-    fups2 = tapply(tmp2$time,tmp2$patientID,min)
-    fups2 = data.frame(patientID = names(fups2), followup = fups2)
+      ## followup-for censored individuals
+      fups2 = tapply(tmp2$time - tmp2$followupStart,tmp2$patientID,min)
+      fups2 = data.frame(patientID = names(fups2), followup = fups2)
     }
     else
     {

@@ -15,7 +15,7 @@ setMethod("computeSS", signature(object = "unconditionalBernoulliTS"), function(
 
   for(r in 1:length(object@mapNodesLeaves))
   {
-   ind = which(object@leaves %in% object@mapNodesLeaves[[r]])
+   ind = which(object@data[,1] %in% object@mapNodesLeaves[[r]])
    object@nodeSS$node[r]     = names(object@mapNodesLeaves)[r]
    object@nodeSS$case[r]     =  sum(object@data$case[ind])
    object@nodeSS$control[r]  = sum(object@data$control[ind])

@@ -12,8 +12,7 @@ setMethod("computeSS", signature(object = "poissonSurvivalTS"), function(object,
 
   for(r in 1:length(object@mapNodesLeaves))
   {
-   ind = which(object@leaves %in% object@mapNodesLeaves[[r]])
-
+   ind = which(object@data[,1] %in% object@mapNodesLeaves[[r]])
    object@nodeSS$node[r]     = names(object@mapNodesLeaves)[r]
    
    object@nodeSS$events_case[r]      = sum(object@data$events_case[ind])

@@ -12,7 +12,7 @@
 #'@param type determines the type of Bernoulli TBSS to perform. Possible values are \code{type = "unconditional"} for unconditional Bernoulli TBSS, \code{type = "conditional"} for TBSS conditional to the total number of events in the tree, and  \code{type = "variableMR"} for variable matching ratios TBSS (see Details). Default is \code{type = "unconditional"}. 
 #'@param nodeToRemove a character vector with user-specified nodes to be removed from the analysis.  Note that sufficient statistics for these nodes are computed, but they are excluded from the testing procedure. By removing nodes from the list of tests, power can increase because of the decreased number of hypotheses that are tested. This list should be specified before running the analysis.  
 #'@param seed a number indicating the seed used for the analysis, i.e., the input of \code{set.seed()}. Default \code{seed  = 8277}.
-#'@details In TBSS, analyzing matched data with a variable matching ratio requires specifying a different \eqn{p} for each matched set. Typically, we have a length-\eqn{M} vector \eqn{(p_1, \ldots,p_M)} corresponding to \eqn{m:1} matched sets with \eqn{p_m = 1/(1+m)} for \eqn{m=1,\ldots,M.} Note that the same logic applies to any stratified analysis where the \eqn{M} sets are strata, and \eqn{p_m} is the probability of being associated with the untreated group under the null hypothesis. An example of how data are formatted for this analysis is provided in the examples.
+#'@details In TBSS, analyzing matched data with a variable matching ratio requires specifying a different \eqn{p} for each matched set. Typically, we have a length-\eqn{M} vector \eqn{(p_1, \ldots,p_M)} corresponding to \eqn{m:1} matched sets with \eqn{p_m = 1/(1+m)} for \eqn{m=1,\ldots,M.} Note that the same logic applies to any stratified analysis where the \eqn{M} sets are strata, and \eqn{p_m} is the probability of being associated with the treated group under the null hypothesis. An example of how data are formatted for this analysis is provided in the examples.
 #'@references
 #' Kulldorff, M., Fang, Z. and Walsh, S.J., 2003. A tree-based scan statistic for database disease surveillance. Biometrics, 59(2), pp.323-331.
 #'
@@ -72,7 +72,7 @@ bernoulliTBSS =  function(case,control,tree, p = 1/2, min_events = 2, B = 999, p
 {
 set.seed(seed)
 ## stop if the parameter min_events is smaller than 2 or negative 
-if(min_events < 2) stop("min_events should be a number greater than 2.")
+if(min_events < 2) stop("min_events should be a number greater than or equal to 2.")
  ## create data 
  if(type == 'unconditional' | type =='conditional')  
  {
