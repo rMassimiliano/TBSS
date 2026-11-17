@@ -77,7 +77,7 @@ function (object)
     for(r in ind_set)
     {
       leaf = object@mapNodesLeaves[[object@nodeSS$node[r]]]
-      ind = which(object@data[,1] %in% object@mapNodesLeaves[[r]])
+      ind = which(object@nodeSS$node %in% leaf)
 
       object@nodeSS$case_reference[r] = sum(object@nodeSS$case_reference[ind])
       object@nodeSS$case_hazard[r] = sum(object@nodeSS$case_hazard[ind])

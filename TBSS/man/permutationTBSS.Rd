@@ -42,7 +42,7 @@ permutationTBSS(
 
 \item{washout_window}{a numeric vector with two negative numbers that indicate the length  of the washout window relative to the index data. For example, if washout_window = c(-180,-1) all diagnosis events that occurred in the 180 days (including days -180 and -1)  before the index are used for washout. The default is \code{washout_window = NULL} indicating that all events before the index date (excluded) are used for washout.}
 
-\item{direction}{can be either \code{'positive'}, \code{"negative"} or, \code{"all"} by default (\code{direction = 'positive'}) poissonTBSS only look at nodes where the number of expected cases is larger than the number of observed cases, or equivalently the excess of cases is positive. Setting  \code{direction = '"all"'} test all nodes, while \code{direction  = "negative"} only node with negative excess of cases.}
+\item{direction}{can be either \code{'positive'}, \code{"negative"} or \code{"all"}. By default (\code{direction = 'positive'}), the LRT of the nodes where the observed number of cases (or rate) is not larger than the expected one is set to 0. The restriction is applied in the same way to the observed data and to every Monte Carlo replicate. Setting \code{direction = "all"} tests all nodes, while \code{direction = "negative"} only considers nodes where the observed number of cases (or rate) is not larger than the expected.}
 
 \item{offset}{indicate how expected counts are scaled to be compared with observed counts. Possible values include "sum_of_weights" indicating that expected counts are scaled with  (N weighted total exposed / N weighted total comparator) and "unscaled" for no scaling. Alternative scaling can be used by directly scaling the weights in the cohort file, and using the "unscaled" option for offset. By default no scaling is applied.}
 
@@ -69,7 +69,7 @@ attach(patient_level_data)
 ## load tree
 data(tree_example, package = 'TBSS')
 
-## running the algorithm eith 30 permutation with 2 cores in parallel for this example
+## running the algorithm with 30 permutation with 2 cores in parallel for this example
 ## default is 999 without parallelization
 mod_tbss = permutationTBSS(cohort, diagnosis_table, tree_example,
 		       B = 30, parallel = TRUE, ncpus = 2) 

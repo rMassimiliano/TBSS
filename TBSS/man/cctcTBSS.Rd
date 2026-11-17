@@ -2,7 +2,7 @@
 % Please edit documentation in R/cctcTBSS.R
 \name{cctcTBSS}
 \alias{cctcTBSS}
-\title{This function implement TreeScan for a case-case-time control design}
+\title{This function implements TreeScan for a case-case-time control design}
 \usage{
 cctcTBSS(
   case,
@@ -20,7 +20,7 @@ cctcTBSS(
 
 \item{control}{a matrix or data.frame with three columns (leavesID, cases in the reference window, cases in the hazard window)}
 
-\item{tree}{a matrix or data.frame with two columns (nodeID, parantNodeID)}
+\item{tree}{a matrix or data.frame with two columns (nodeID, parentNodeID)}
 
 \item{B}{number of bootstrap replicates. Default is `999`.}
 
@@ -33,5 +33,5 @@ cctcTBSS(
 \item{seed}{a number indicating the seed used for the analysis, i.e., the input of \code{set.seed()}. Default \code{seed  = 8277}.}
 }
 \description{
-This function implement TreeScan for a case-case-time control design
+This function implements TreeScan for a case-case-time control design
 }

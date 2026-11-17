@@ -7,12 +7,12 @@
 #' @param B number of Monte Carlo (i.e., permutations) replicates. The default is \code{B = 999}.
 #' @param parallel if \code{parallel = TRUE} parallel computing is used to compute the Monte Carlo p-values.
 #' @param ncpus number of cpus used if \code{parallel = TRUE}. If no value is provided, the default is \code{ncpus = detectCores() - 1}.
-#'@param direction can be either \code{'positive'}, \code{"negative"} or \code{"all"}. By default (\code{direction = 'positive'}), the LRT of the nodes where the observed number of cases (or rate) is not larger than the expected one is set to 0. The restriction is applied in the same way to the observed data and to every Monte Carlo replicate. Setting \code{direction = "all"} tests all nodes, while \code{direction = "negative"} only considers nodes where the observed number of cases (or rate) is not smaller than the expected
-#'@param nodeToRemove a character vector with user-specified nodes to be removed from the analysis.  Note that sufficient statistics for these nodes are computed, but they are excluded from the testing procedure. By removing nodes from the list of tests, power can increase because of the decreased number of hypotheses that are tested. This list should be specified before running the analysis.  
+#'@param direction can be either \code{'positive'}, \code{"negative"} or \code{"all"}. By default (\code{direction = 'positive'}), the LRT of the nodes where the observed number of cases (or rate) is not larger than the expected one is set to 0. The restriction is applied in the same way to the observed data and to every Monte Carlo replicate. Setting \code{direction = "all"} tests all nodes, while \code{direction = "negative"} only considers nodes where the observed number of cases (or rate) is not larger than the expected.
+#'@param nodeToRemove a character vector with user-specified nodes to be removed from the analysis.  Note that sufficient statistics for these nodes are computed, but they are excluded from the testing procedure. By removing nodes from the list of tests, power can increase because of the decreased number of hypotheses that are tested. This list should be specified before running the analysis. 
 #'@param washout_window  a numeric vector with two negative numbers that indicate the length  of the washout window relative to the index data. For example, if washout_window = c(-180,-1) all diagnosis events that occurred in the 180 days (including days -180 and -1)  before the index are used for washout. The default is \code{washout_window = NULL} indicating that all events before the index date (excluded) are used for washout.
 #'@param offset  indicate how expected counts are scaled to be compared with observed counts. Possible values include "sum_of_weights" indicating that expected counts are scaled with  (N weighted total exposed / N weighted total comparator) and "unscaled" for no scaling. Alternative scaling can be used by directly scaling the weights in the cohort file, and using the "unscaled" option for offset. By default no scaling is applied.
 #' @param statistic indicate the test statistic to be used for the permutation test. Possible values are `Poisson` (the default) that uses the log-likelihood ratio test for testing the difference of the ratios of two Poisson distributions and `Cox` that uses the log partial likelihood ratio from a Cox model. 
-#'@param seed a number indicating the seed used for the analysis, i.e., the input of \code{set.seed()}. Default \code{seed  = 8277}.
+#'@param seed a number indicating the seed used for the analysis, i.e., the input of \code{set.seed()}. Default \code{seed  = 8277}.If \code{seed = NULL} no seed is used.
 #' @param parsedParameters a names list of object that can be precomputed. This include mapNodeTree (i.e., the tree parsing step), and idInNode (the list of nodes/patients created by the \code{applyNodeSpecificWashout()} function). When follow-up time is specified, personTime and personTimeNotInNode are also needed. These parameters are created by the function \code{applyNodeSpecificWashout()} and if they are not provided they are recomputed.
 #'@param verbose, if \code{TRUE} (default) print some messages 
 #'@param relative, if \code{FALSE} force the analysis to be on means rather than rates even when followup time start and end days are provided in the cohort file. If followup details are not provided this parameter is ignored. 
@@ -30,7 +30,7 @@
 #' ## load tree
 #' data(tree_example, package = 'TBSS')
 #' 
-#' ## running the algorithm eith 30 permutation with 2 cores in parallel for this example
+#' ## running the algorithm with 30 permutation with 2 cores in parallel for this example
 #' ## default is 999 without parallelization
 #' mod_tbss = permutationTBSS(cohort, diagnosis_table, tree_example,
 #'			       B = 30, parallel = TRUE, ncpus = 2) 
@@ -38,7 +38,7 @@
 #' summary(mod_tbss) |> head()
 permutationTBSS = function(cohort, diagnosis_table,tree, min_events = 2, B = 999, parallel = FALSE, ncpus = NULL, nodeToRemove = NULL,washout_window = NULL, direction = 'positive', offset = "unscaled", statistic = 'Poisson', seed  = 8277, parsedParameters = NULL, verbose = TRUE, relative = TRUE)
 {
-set.seed(seed)
+if(!is.null(seed)) set.seed(seed)
 offset = match.arg(offset, c("sum_of_weights", "unscaled"))
 statistic = match.arg(statistic, c("Poisson", "Cox"))
 ## stop if the direction is not among the possibilities
@@ -182,7 +182,7 @@ if(!is.null(nodeToRemove))
 {
  myTS@nodesToTest = setdiff(myTS@nodesToTest,nodeToRemove) 
 }
-if(length(myTS@nodesToTest) == 0) stop("No outcome node to be tested after removing nodes from the list for min_events conditions and explicitely with nodeToRemove.")
+if(length(myTS@nodesToTest) == 0) stop("No outcome node to be tested after removing nodes from the list for min_events conditions and explicitly with nodeToRemove.")
 
 myTS = computeLRT(myTS) 
 

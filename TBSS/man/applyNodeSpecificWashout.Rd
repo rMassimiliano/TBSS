@@ -19,7 +19,7 @@ The updated TS object includes a the slot \code{idInNode} which is a named list 
 If \code{object@fup = TRUE}, that is to say we are accounting for person time, other two named list \code{personTime} and \code{personTimeNotInNode} are also included in the output. 
 The \code{personTime} includes the total person time, in days, for the exposed and comparator groups.
 The person time is weighted using the weight provided in the cohort file. In case an event happens the same day as the index date, we assume that the event after 1/2 a day. 
-Patients excluded from the washout procedure are "censored" rather than excluded from the analysis, hence their person time counts. For "censored" patients we consider as person time the length of the follow-up. 
+Patients excluded from the washout procedure are "censored" rather than excluded from the analysis, hence their person-time counts. For "censored" patients, we censor their time at the first occurring event or the length of follow-up if they experience no events.
 \code{personTimeNotInNode} includes person time for all the individuals that did not experienced that node event.
 }
 \description{

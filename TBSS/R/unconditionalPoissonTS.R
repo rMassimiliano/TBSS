@@ -128,6 +128,7 @@ setMethod("H1_gen", signature(object = "unconditionalPoissonTS"),
 
      ## Alternative leaves
      indx = match(alternativeLeaves, object@nodeSS$node)
+     if(anyNA(indx)) stop("alternativeLeaves should be leaves of the tree.")
      object@nodeSS$observed[indx] = stats::rpois(length(indx), object@nodeSS$expected[indx]*rep_len(alternativeParameter, length(indx)))
 
   

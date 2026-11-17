@@ -84,6 +84,8 @@ function(object, alternativeParameter, alternativeLeaves)
   ## relative risk of each leaf: 1 under the null, alternativeParameter for the alternative leaves
   rr = rep(1, length(indx))
   alt = match(alternativeLeaves, object@nodeSS$node[indx])
+  if(anyNA(alt)) stop("alternativeLeaves should be leaves of the tree.")
+
   rr[alt] = rep_len(alternativeParameter, length(alt))
   probs =  object@nodeSS$expected[indx]*rr/sum(object@nodeSS$expected[indx]*rr)
 

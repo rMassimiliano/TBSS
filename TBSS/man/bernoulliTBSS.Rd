@@ -45,7 +45,7 @@ bernoulliTBSS(
 This function implements a variety of  Bernoulli TBSS, including stratified analysis that can be used with matched data with variable matching ratios.
 }
 \details{
-In TBSS, analyzing matched data with a variable matching ratio requires specifying a different \eqn{p} for each matched set. Typically, we have a length-\eqn{M} vector \eqn{(p_1, \ldots,p_M)} corresponding to \eqn{m:1} matched sets with \eqn{p_m = 1/(1+m)} for \eqn{m=1,\ldots,M.} Note that the same logic applies to any stratified analysis where the \eqn{M} sets are strata, and \eqn{p_m} is the probability of being associated with the untreated group under the null hypothesis. An example of how data are formatted for this analysis is provided in the examples.
+In TBSS, analyzing matched data with a variable matching ratio requires specifying a different \eqn{p} for each matched set. Typically, we have a length-\eqn{M} vector \eqn{(p_1, \ldots,p_M)} corresponding to \eqn{m:1} matched sets with \eqn{p_m = 1/(1+m)} for \eqn{m=1,\ldots,M.} Note that the same logic applies to any stratified analysis where the \eqn{M} sets are strata, and \eqn{p_m} is the probability of being associated with the treated group under the null hypothesis. An example of how data are formatted for this analysis is provided in the examples.
 }
 \examples{
 ## Unconditional Bernoulli TBSS examples

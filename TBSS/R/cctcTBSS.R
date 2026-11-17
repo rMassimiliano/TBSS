@@ -1,17 +1,16 @@
-#' This function implement TreeScan for a case-case-time control design
+#' This function implements TreeScan for a case-case-time control design
 #' @param `case` a matrix or data.frame with three columns (leavesID, cases in the reference window, cases in the hazard window)
 #' @param `control` a matrix or data.frame with three columns (leavesID, cases in the reference window, cases in the hazard window)
-#' @param `tree` a matrix or data.frame with two columns (nodeID, parantNodeID) 
+#' @param `tree` a matrix or data.frame with two columns (nodeID, parentNodeID) 
 #' @param `B` number of bootstrap replicates. Default is `999`.
 #' @param `parallel` if TRUE parallel computing is used to compute the bootstrap p-values.
 #' @param `ncpus` number of cpus used if `parallel = TRUE`. If no value is provided set to  `detectCores() - 1`.
-#'@param nodeToRemove a character vector with user-specified nodes to be removed from the analysis.  Note that sufficient statistics for these nodes are computed, but they are excluded from the testing procedure. By removing nodes from the list of tests, power can increase because of the decreased number of hypotheses that are tested. This list should be specified before running the analysis.  
-#'@param seed a number indicating the seed used for the analysis, i.e., the input of \code{set.seed()}. Default \code{seed  = 8277}.
-
+#'@param nodeToRemove a character vector with user-specified nodes to be removed from the analysis.  Note that sufficient statistics for these nodes are computed, but they are excluded from the testing procedure. By removing nodes from the list of tests, power can increase because of the decreased number of hypotheses that are tested. This list should be specified before running the analysis. 
+#'@param seed a number indicating the seed used for the analysis, i.e., the input of \code{set.seed()}. Default \code{seed  = 8277}.If \code{seed = NULL} no seed is used.
 #' @export
 cctcTBSS =  function(case,control,tree,B = 999, parallel = FALSE, ncpus = NULL, nodeToRemove = NULL, seed  = 8277)
 {
- set.seed(seed)
+ if(!is.null(seed)) set.seed(seed)
  ## create data 
  names(case) = c("leaf", "case_reference", "case_hazard")
  names(control) = c("leaf", "control_reference", "control_hazard")
@@ -35,7 +34,7 @@ cctcTBSS =  function(case,control,tree,B = 999, parallel = FALSE, ncpus = NULL, 
   {
    myTS@nodesToTest = setdiff(myTS@nodesToTest, nodeToRemove) 
   }
-  if(length(myTS@nodesToTest) == 0) stop("No outcome node to be tested after removing nodes from the list for min_events conditions and explicitely with nodeToRemove.")
+  if(length(myTS@nodesToTest) == 0) stop("No outcome node to be tested after removing nodes from the list for min_events conditions and explicitly with nodeToRemove.")
   myTS = computeLRT(myTS)
   myTS = monteCarlo(myTS, parallel, ncpus)
 

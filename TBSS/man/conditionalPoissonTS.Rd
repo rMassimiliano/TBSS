@@ -6,6 +6,7 @@
 \alias{conditionalPoissonTS}
 \alias{computeLRT,conditionalPoissonTS-method}
 \alias{H0_gen,conditionalPoissonTS-method}
+\alias{H1_gen,conditionalPoissonTS-method}
 \alias{summary,conditionalPoissonTS-method}
 \title{Conditional Poisson TS class}
 \usage{
@@ -13,10 +14,16 @@
 
 \S4method{H0_gen}{conditionalPoissonTS}(object)
 
+\S4method{H1_gen}{conditionalPoissonTS}(object, alternativeParameter, alternativeLeaves)
+
 \S4method{summary}{conditionalPoissonTS}(object)
 }
 \arguments{
 \item{object}{an object of class TS}
+
+\item{alternativeParameter}{relative risk(s) used for the leaves under the alternative}
+
+\item{alternativeLeaves}{leaves under the alternative model}
 }
 \description{
 Define the class for Unconditional Poisson TBSS and inherit from unconditionalPoissonTS
@@ -24,6 +31,8 @@ Define the class for Unconditional Poisson TBSS and inherit from unconditionalPo
 \code{computeLRT()} Compute The log-likelihood ratio statistics for conditionalPoissonTS
 
 \code{H0_gen()} generate data under the null
+
+\code{H1_gen()} generate data under a specific alternative model, conditional on the total number of observed events.  The expected counts of the \code{alternativeLeaves} are multiplied by \code{alternativeParameter}. Events are generated from  a multinomial distribution.
 
 \code{summary()} provide a summary of the conditional poisson TBSS analysis results.
 }

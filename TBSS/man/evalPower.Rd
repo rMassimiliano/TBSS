@@ -11,13 +11,14 @@ evalPower(
   alpha = 0.05,
   R = 1000,
   parallel = FALSE,
-  ncpus = NULL
+  ncpus = NULL,
+  seed = NULL
 )
 }
 \arguments{
 \item{object}{an object of class \code{TS}}
 
-\item{alternativeParameter}{either a number or a vector of lenght(alternativeLeaves) specifying the parameters to be used for the alternative model. For Poisson scan statistics this is an increase in relative risk, while for Bernoulli scan statistics is the probability under the alternative hypothesis.}
+\item{alternativeParameter}{either a number or a vector of length(alternativeLeaves) specifying the parameters to be used for the alternative model. For Poisson scan statistics this is an increase in relative risk, while for Bernoulli scan statistics is the probability under the alternative hypothesis.}
 
 \item{alternativeLeaves}{a vector with the name of the leaves that will be generated under the alternative model. See details}
 
@@ -28,6 +29,8 @@ evalPower(
 \item{parallel}{if \code{TRUE} parallel computing is used to compute the bootstrap p-values.}
 
 \item{ncpus}{number of cpus used if \code{parallel = TRUE}. If no value is provided set to  \code{ncpus = detectCores() - 1}.}
+
+\item{seed}{a number indicating the seed used for the analysis, i.e., the input of \code{set.seed()}. Default \code{seed  = NULL} is no seed.}
 }
 \description{
 Evaluate power of TBSS for a specific alternative distribution

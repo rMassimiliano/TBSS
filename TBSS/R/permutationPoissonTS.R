@@ -109,8 +109,6 @@ function (object)
       object@personTimeNotInNode = object@personTimeNotInNode[object@nodesToTest]
      }
      object = computeSS(object)
-
-     object = computeSS(object)
     return(object)
    }
 )

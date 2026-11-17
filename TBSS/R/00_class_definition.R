@@ -25,8 +25,8 @@ setClass(Class = "TS", slots = c(data = 'data.frame',
                                  nodeSS = 'data.frame',
                                  LRT ='numeric',
                                  B = 'numeric',
-                                 LRT_H0 = 'matrix'),
-				direction = 'character'))
+                                 LRT_H0 = 'matrix',
+				 direction = 'character'))
 
 #' Unconditional Bernoulli TS class
 #' @description Define the class for Unconditional Bernoulli TBSS and directly inherit from TS

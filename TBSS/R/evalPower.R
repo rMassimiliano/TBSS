@@ -1,7 +1,7 @@
 #' Evaluate power of TBSS for a specific alternative distribution
 
 #' @param object an object of class \code{TS} 
-#' @param alternativeParameter either a number or a vector of lenght(alternativeLeaves) specifying the parameters to be used for the alternative model. For Poisson scan statistics this is an increase in relative risk, while for Bernoulli scan statistics is the probability under the alternative hypothesis. 
+#' @param alternativeParameter either a number or a vector of length(alternativeLeaves) specifying the parameters to be used for the alternative model. For Poisson scan statistics this is an increase in relative risk, while for Bernoulli scan statistics is the probability under the alternative hypothesis. 
 #' @param alternativeLeaves a vector with the name of the leaves that will be generated under the alternative model. See details
 #' @param alpha is the type-I error used for the test. The default is 0.05.
 #' @param R is the number of dataset simulated under the alternative and used to estimate the power. 

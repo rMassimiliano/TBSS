@@ -32,7 +32,7 @@ poissonTBSS(
 
 \item{type}{determines the type of Poisson TBSS to perform. Possible values are \code{type = "unconditional"} for unconditional Poisson TBSS, and \code{type = "conditional"} for Poisson TBSS conditional to the total number of events in the tree.  Default is \code{type = "unconditional"}.}
 
-\item{direction}{can be either \code{'positive'}, \code{"negative"} or, \code{"all"} by default (\code{direction = 'positive'}) poissonTBSS only look at nodes where the number of expected cases is larger than the number of observed cases, or equivalently the excess of cases is positive. Setting  \code{direction = '\code{"all"}'} test all nodes, while \code{direction  = "negative"} only node with negative excess of cases.}
+\item{direction}{can be either \code{'positive'}, \code{"negative"} or \code{"all"}. By default (\code{direction = 'positive'}), the LRT of the nodes where the observed number of cases (or rate) is not larger than the expected one is set to 0. The restriction is applied in the same way to the observed data and to every Monte Carlo replicate. Setting \code{direction = "all"} tests all nodes, while \code{direction = "negative"} only considers nodes where the observed number of cases (or rate) is not larger than the expected.}
 
 \item{nodeToRemove}{a character vector with user-specified nodes to be removed from the analysis.  Note that sufficient statistics for these nodes are computed, but they are excluded from the testing procedure. By removing nodes from the list of tests, power can increase because of the decreased number of hypotheses that are tested. This list should be specified before running the analysis.}
 
