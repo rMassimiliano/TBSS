@@ -42,7 +42,7 @@
 #'mod_tbss = bernoulliTBSS(case = data_treated,
 #'                         control = data_untreated, 
 #'                         tree = tree_example, 
-#'                          p = matching_prob )
+#'                          p = matching_prob, B = 99)
 #' # inspect potential signals
 #' summary(mod_tbss) |> dplyr::filter(pvalue <=0.05)
 #'
@@ -63,7 +63,7 @@
 #'head(data_untreated)
 #'
 #' mod_tbss = bernoulliTBSS(case = data_treated, control = data_untreated,
-#'			    tree = tree_example, type ='variableMR')
+#'			    tree = tree_example, type ='variableMR', B = 99)
 #'
 #' # inspect potential signals
 #' summary(mod_tbss) |> dplyr::filter(pvalue <=0.05)
