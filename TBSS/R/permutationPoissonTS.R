@@ -117,6 +117,7 @@ function (object)
 #'  Summary method
 #' @description provide a  summary of the TBSS analysis results. Include time and relative measure if follow-up time is used. 
 #' @param object an object of class TS
+#' @return \code{summary()} returns a \code{data.frame}. One row per node of the tree: the tested nodes first, ordered by decreasing \code{LRT}, then the nodes that were not tested, with \code{LRT} and \code{pvalue} equal to \code{NA}. Without follow-up the columns are \code{node}; \code{observed} and \code{expected}, the weighted number of exposed and unexposed patients with an event in the node; \code{relativeRisk} = observed/expected; \code{excessCases} = observed - expected; \code{LRT}; \code{pvalue}. With follow-up, \code{observed} and \code{expected} are replaced by \code{observed_rate} and \code{expected_rate}, the weighted event rates (events per unit of person time) of the exposed and of the unexposed; \code{relativeRisk} is their ratio and \code{excessCases} their difference. \code{pvalue} is the Monte Carlo p-value adjusted for the multiple testing over the tree, (1 + number of replicates whose maximum LRT is at least the LRT of the node)/(B + 1).
 #' @rdname permutationPoissonTS
 
 setMethod(f = "summary",

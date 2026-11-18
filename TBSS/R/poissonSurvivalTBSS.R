@@ -12,6 +12,7 @@
 
 #'@references 
 #' Russo, M., Hahn, G., Huybrechts, K. F., & Wang, S. V. (2026). A tree-based scan statistic for database studies with time-to-event outcomes. arXiv preprint arXiv:2609.38582.
+#' @return An S4 object of class \code{poissonSurvivalTS}.  The slot \code{LRT} contains the log-likelihood ratio of each tested node (named by node). The tested nodes are also listed in slot \code{nodesToTest}). The slot \code{LRT_H0} is a matrix with one row per tested node and one column per Monte Carlo replicate, and slot \code{nodeSS} contains the sufficient statistics of every node of the tree. Use \code{summary()} for a table of the results with the Monte Carlo p-values.
 #'@export
 #'@examples 
 #' ## Unconditional Poisson TBSS examples

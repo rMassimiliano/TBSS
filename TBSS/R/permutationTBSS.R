@@ -21,6 +21,7 @@
 #' Russo, M., Sreedhara, S.K., Smith, J., Davis, S.E., Maro, J.C., Deramus, T., Lii, J., Yang, J., Desai, R.J., Hernández-Muñoz, J.J. and Ma, Y., 2026. Electronic health record-enhanced signal detection using tree-based scan statistic methods. American Journal of Epidemiology, 195(1), pp.178-187.
 #'
 #' Russo, M., Hahn, G., Huybrechts, K. F., & Wang, S. V. (2026). A tree-based scan statistic for database studies with time-to-event outcomes. arXiv preprint arXiv:2609.38582.
+#' @return An S4 object of class \code{permutationPoissonTS} (\code{statistic = 'Poisson'}) or \code{coxSurvivalTS} (\code{statistic = 'Cox'}. The slot \code{LRT} contains the log-likelihood ratio of each tested node (named by node)  The tested nodes are also listed in slot \code{nodesToTest}). The slot \code{LRT_H0} is a matrix with one row per tested node and one column per Monte Carlo replicate, and the slot \code{nodeSS} contains the sufficient statistics of every node of the tree. Use \code{summary()} for a table of the results with the Monte Carlo p-values. The object also contains information on the the cohort (slots \code{cohort}) used for the analysis and, for each node, the patients with an event in the node (slot \code{idInNode}) and, with follow-up, their person time (slot \code{personTime}). When a follow-up is provided, for each node the person time for the patients not experiencing that events is in the slot \code{personTimeNotInNode}).
 #' @export
 #' @examples
 #' library(TBSS)

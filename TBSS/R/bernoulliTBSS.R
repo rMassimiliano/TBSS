@@ -17,6 +17,7 @@
 #' Kulldorff, M., Fang, Z. and Walsh, S.J., 2003. A tree-based scan statistic for database disease surveillance. Biometrics, 59(2), pp.323-331.
 #'
 #' Russo, M. and Wang, S.V., 2024. An open‐source implementation of tree‐based scan statistics. Pharmacoepidemiology and drug safety, 33(3), p.e5765.
+#' @return An S4 object of class \code{unconditionalBernoulliTS} (\code{type = 'unconditional'}) or \code{unconditionalBernoulliTSVariableRR} (\code{type = 'variableMR'}). The slot \code{LRT} contains the log-likelihood ratio of each tested node (named by node). The tested nodes are also listed in the slot \code{nodesToTest}). The slot \code{LRT_H0} is a matrix with one row per tested node and one column per Monte Carlo replicate, and slot \code{nodeSS} the sufficient statistics of every node of the tree. Use \code{summary()} for a table of the results with the Monte Carlo p-values.
 #'@export
 #' @examples
 #' ## Unconditional Bernoulli TBSS examples

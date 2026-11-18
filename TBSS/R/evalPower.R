@@ -8,6 +8,8 @@
 #' @param parallel if \code{TRUE} parallel computing is used to compute the bootstrap p-values.
 #' @param ncpus number of cpus used if \code{parallel = TRUE}. If no value is provided set to  \code{ncpus = detectCores() - 1}.
 #'@param seed a number indicating the seed used for the analysis, i.e., the input of \code{set.seed()}. Default \code{seed  = NULL} is no seed.
+#' @return A number between 0 and 1: the estimated power, i.e. the proportion of the \code{R} data sets simulated under the alternative whose maximum LRT is at least the \code{1 - alpha} quantile of the null distribution of the maximum LRT (the Monte Carlo replicates of \code{object} and its observed maximum).
+#' @return A number between 0 and  representing the estimated power. The estimated power is computed as  the proportion of the \code{R} data sets simulated under the alternative whose maximum LRT is at least the \code{1 - alpha} quantile of the null distribution of the maximum LRT (the Monte Carlo replicates of \code{object} and its observed maximum).
 #' @export
 #' @examples
 #' library(TBSS)

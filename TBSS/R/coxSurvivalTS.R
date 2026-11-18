@@ -89,6 +89,8 @@ setMethod("computeLRT", signature(object = "coxSurvivalTS"), function(object) {
 #'  Summary method
 #' @description provide a  summary of the TBSS analysis results. Include Hazard Ratio (HR), time and relative measures 
 #' @param object an object of class TS
+
+#' @return \code{summary()} returns a \code{data.frame}. One row per node of the tree: the tested nodes first, ordered by decreasing \code{LRT}, then the nodes that were not tested, with \code{LRT} and \code{pvalue} equal to \code{NA}.  \code{observed_rate} and \code{expected_rate} are the weighted event rates (events per unit of person time) of the exposed and of the unexposed; \code{relativeRisk} is their ratio and \code{excessCases} their difference. \code{pvalue} is the Monte Carlo p-value adjusted for the multiple testing over the tree, (1 + number of replicates whose maximum LRT is at least the LRT of the node)/(B + 1). \code{HR}, is the hazard ratio of the exposure estimated by the weighted Cox model of the node.
 #' @rdname permutationPoissonTS
 setMethod(f = "summary",
           signature = "coxSurvivalTS",

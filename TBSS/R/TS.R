@@ -205,6 +205,7 @@ else
 #'  Show method
 #' @description  \code{show()} print the most likely cut in a TBSS analysis with log-likelihood ratio and p-value
 #' @param object an object of class TS
+#' @return \code{show()} is called for its side effect of printing the most likely cut.
 #' @rdname TS
 setMethod(f = "show",
           signature = "TS",
@@ -221,6 +222,7 @@ setMethod(f = "show",
 #'  Summary method
 #' @description \code{summary()} provide a (minimal) summary of the TBSS analysis results.  Specific instances of TS class might implement more detailed summaries
 #' @param object an object of class TS
+#' @return \code{summary()} returns a \code{data.frame} with one row per tested node, ordered by decreasing \code{LRT}, and columns \code{node}, \code{LRT} and \code{pvalue}. \code{pvalue} is the Monte Carlo p-value adjusted for the multiple testing over the tree, (1 + number of replicates whose maximum LRT is at least the LRT of the node)/(B + 1).
 #' @rdname TS
 #'@export
 setMethod(f = "summary",
