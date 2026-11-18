@@ -73,3 +73,21 @@
 #'}
 #' @source Simulated dataset.
 "patient_level_data"
+
+
+
+#' Example for Case-Case-Time-Control
+
+#' @format A named list containing two data frames:
+#' \describe{
+#'     Two data frame with 13 rows, one for the case on for the control 
+#'     \describe{
+#'       \item{leaf}{Unique identifier for the leaf, character}
+#'	\item{control_reference}{Number of events for the controls in the reference window}
+#' 	\item{control_hazard}{Number of events for the controls in the hazard window}
+#'	\item{case_reference}{Number of events for the cases in the reference window}
+#' 	\item{case_hazard}{Number of events for the cases in the hazard window}
+#'     }
+#'   }
+#' @source Simulated dataset.
+"cctc_TBSS_example"
