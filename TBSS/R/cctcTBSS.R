@@ -20,7 +20,9 @@
 #' data("cctc_TBSS_example", package = 'TBSS')
 #'
 #'
-#'mod_tbss = cctcTBSS(case =cctc_TBSS_example$case, control = cctc_TBSS_example$control,  tree = tree_example)
+#'mod_tbss = cctcTBSS(case =cctc_TBSS_example$case, 
+#'                    control = cctc_TBSS_example$control,
+#' 		      tree = tree_example)
 #' summary(mod_tbss) 
 cctcTBSS =  function(case,control,tree,B = 999, parallel = FALSE, ncpus = NULL, nodeToRemove = NULL, seed  = 8277)
 {

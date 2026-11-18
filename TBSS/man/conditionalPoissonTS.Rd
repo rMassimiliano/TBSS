@@ -25,6 +25,9 @@
 
 \item{alternativeLeaves}{leaves under the alternative model}
 }
+\value{
+\code{summary()} returns a \code{data.frame}. One row per node of the tree: the tested nodes first, ordered by decreasing \code{LRT}, then the nodes that were not tested, with \code{LRT} and \code{pvalue} equal to \code{NA}. Columns: \code{node}; \code{observed}, the observed count of the node; \code{expected}, its expected count rescaled to the total observed count; \code{relativeRisk}, the ratio of observed/expected in the node to observed/expected outside the node; \code{excessCases}, observed minus the count expected from the rate outside the node; \code{LRT}; \code{pvalue}. \code{pvalue} is the Monte Carlo p-value adjusted for the multiple testing over the tree, (1 + number of replicates whose maximum LRT is at least the LRT of the node)/(B + 1).
+}
 \description{
 Define the class for Unconditional Poisson TBSS and inherit from unconditionalPoissonTS
 

@@ -48,13 +48,16 @@ permutationTBSS(
 
 \item{statistic}{indicate the test statistic to be used for the permutation test. Possible values are `Poisson` (the default) that uses the log-likelihood ratio test for testing the difference of the ratios of two Poisson distributions and `Cox` that uses the log partial likelihood ratio from a Cox model.}
 
-\item{seed}{a number indicating the seed used for the analysis, i.e., the input of \code{set.seed()}. Default \code{seed  = 8277}.}
+\item{seed}{a number indicating the seed used for the analysis, i.e., the input of \code{set.seed()}. Default \code{seed  = 8277}.If \code{seed = NULL} no seed is used.}
 
 \item{parsedParameters}{a names list of object that can be precomputed. This include mapNodeTree (i.e., the tree parsing step), and idInNode (the list of nodes/patients created by the \code{applyNodeSpecificWashout()} function). When follow-up time is specified, personTime and personTimeNotInNode are also needed. These parameters are created by the function \code{applyNodeSpecificWashout()} and if they are not provided they are recomputed.}
 
 \item{verbose, }{if \code{TRUE} (default) print some messages}
 
 \item{relative, }{if \code{FALSE} force the analysis to be on means rather than rates even when followup time start and end days are provided in the cohort file. If followup details are not provided this parameter is ignored.}
+}
+\value{
+An S4 object of class \code{permutationPoissonTS} (\code{statistic = 'Poisson'}) or \code{coxSurvivalTS} (\code{statistic = 'Cox'}. The slot \code{LRT} contains the log-likelihood ratio of each tested node (named by node)  The tested nodes are also listed in slot \code{nodesToTest}). The slot \code{LRT_H0} is a matrix with one row per tested node and one column per Monte Carlo replicate, and the slot \code{nodeSS} contains the sufficient statistics of every node of the tree. Use \code{summary()} for a table of the results with the Monte Carlo p-values. The object also contains information on the the cohort (slots \code{cohort}) used for the analysis and, for each node, the patients with an event in the node (slot \code{idInNode}) and, with follow-up, their person time (slot \code{personTime}). When a follow-up is provided, for each node the person time for the patients not experiencing that events is in the slot \code{personTimeNotInNode}).
 }
 \description{
 This function implements a permutation based TBSS. The function uses as test the likelihood ratio test (LRT) to compare difference in mean of two Poisson distribution and can include offsets (e.g., the person time for the exposure groups). The null distribution for the LRT is computed  using permutation. Hence, unlike other TBSS this implementation require subject level data. Importantly this implementation can use node-specifyc washout, i.e. for each node it does not count patients  that have already experienced the events codified in the node in a pre-specified washout window.

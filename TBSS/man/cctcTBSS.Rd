@@ -30,8 +30,27 @@ cctcTBSS(
 
 \item{nodeToRemove}{a character vector with user-specified nodes to be removed from the analysis.  Note that sufficient statistics for these nodes are computed, but they are excluded from the testing procedure. By removing nodes from the list of tests, power can increase because of the decreased number of hypotheses that are tested. This list should be specified before running the analysis.}
 
-\item{seed}{a number indicating the seed used for the analysis, i.e., the input of \code{set.seed()}. Default \code{seed  = 8277}.}
+\item{seed}{a number indicating the seed used for the analysis, i.e., the input of \code{set.seed()}. Default \code{seed  = 8277}.If \code{seed = NULL} no seed is used.}
+}
+\value{
+An S4 object of class \code{unconditionalCaseCaseTimeControlTS}. The slot \code{LRT} contains the log-likelihood ratio of each tested node (named by node). The tested nodes are also listed in slot \code{nodesToTest}). The slot \code{LRT_H0} is a matrix with one row per tested node and one column per Monte Carlo replicate, and the slot \code{nodeSS} contains the sufficient statistics of every node of the tree. Use \code{summary()} for a table of the results with the Monte Carlo p-values.
 }
 \description{
 This function implements TreeScan for a case-case-time control design
+}
+\examples{
+## Case-Case-Time-Control example
+library(TBSS)
+
+# load tree 
+data("tree_example", package = 'TBSS')
+
+# load data
+data("cctc_TBSS_example", package = 'TBSS')
+
+
+mod_tbss = cctcTBSS(case =cctc_TBSS_example$case, 
+                   control = cctc_TBSS_example$control,
+		      tree = tree_example)
+summary(mod_tbss) 
 }

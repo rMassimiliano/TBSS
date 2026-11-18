@@ -32,6 +32,11 @@ evalPower(
 
 \item{seed}{a number indicating the seed used for the analysis, i.e., the input of \code{set.seed()}. Default \code{seed  = NULL} is no seed.}
 }
+\value{
+A number between 0 and 1: the estimated power, i.e. the proportion of the \code{R} data sets simulated under the alternative whose maximum LRT is at least the \code{1 - alpha} quantile of the null distribution of the maximum LRT (the Monte Carlo replicates of \code{object} and its observed maximum).
+
+A number between 0 and  representing the estimated power. The estimated power is computed as  the proportion of the \code{R} data sets simulated under the alternative whose maximum LRT is at least the \code{1 - alpha} quantile of the null distribution of the maximum LRT (the Monte Carlo replicates of \code{object} and its observed maximum).
+}
 \description{
 Evaluate power of TBSS for a specific alternative distribution
 }

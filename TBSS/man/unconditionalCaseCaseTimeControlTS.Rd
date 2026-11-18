@@ -12,6 +12,9 @@
 \arguments{
 \item{object}{an object of class TS}
 }
+\value{
+\code{summary()} returns a \code{data.frame}. One row per node of the tree: the tested nodes first, ordered by decreasing \code{LRT}, then the nodes that were not tested, with \code{LRT} and \code{pvalue} equal to \code{NA}. Columns: \code{node}; \code{case_reference}, \code{control_reference}, \code{case_hazard} and \code{control_hazard}, the number of cases and controls of the node in the reference and in the hazard window; \code{LRT}, the difference of the log odds ratios of cases and controls; \code{pvalue}. \code{pvalue} is the Monte Carlo p-value adjusted for the multiple testing over the tree, (1 + number of replicates whose maximum LRT is at least the LRT of the node)/(B + 1).
+}
 \description{
 Define the class for Unconditional Case Case time Control Bernoulli TBSS and directly inherit from TS
 

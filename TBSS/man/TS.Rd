@@ -53,6 +53,11 @@ applyDirection(object, LRT, excess)
 
 \item{excess}{a vector, of the same length as \code{LRT}, with the node-specific excess (e.g., observed minus expected)}
 }
+\value{
+\code{show()} is called for its side effect of printing the most likely cut.
+
+\code{summary()} returns a \code{data.frame} with one row per tested node, ordered by decreasing \code{LRT}, and columns \code{node}, \code{LRT} and \code{pvalue}. \code{pvalue} is the Monte Carlo p-value adjusted for the multiple testing over the tree, (1 + number of replicates whose maximum LRT is at least the LRT of the node)/(B + 1).
+}
 \description{
 \code{listLeaves()} Populate the slot leaves of TS with a vector of the unique values of the first column of data (leaves ID).
 

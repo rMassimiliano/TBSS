@@ -33,6 +33,11 @@
 \arguments{
 \item{object}{an object of class TS}
 }
+\value{
+\code{summary()} returns a \code{data.frame} with one row per node of the tree, ordered by increasing \code{pvalue} (nodes that were not tested last, with \code{LRT} and \code{pvalue} equal to \code{NA}). Columns: \code{node}; \code{case} and \code{control}, the number of cases and controls in the node; \code{expected} = (case + control) * p, the expected number of cases; \code{relativeRisk} = case/expected; \code{excessCases} = case - expected; \code{LRT}; \code{pvalue}. \code{pvalue} is the Monte Carlo p-value adjusted for the multiple testing over the tree, (1 + number of replicates whose maximum LRT is at least the LRT of the node)/(B + 1).
+
+\code{summary()} returns a \code{data.frame} with one row per node of the tree, ordered by increasing \code{pvalue} (nodes that were not tested last, with \code{LRT} and \code{pvalue} equal to \code{NA}). Columns: \code{node}; \code{case} and \code{control}, the number of cases and controls in the node; \code{expected} = sum over the matched sets of (case + control) * p, and \code{relativeRisk} = sum(case/p)/sum(control/(1 - p)) over the matched sets. \code{pvalue} is the Monte Carlo p-value adjusted for the multiple testing over the tree, (1 + number of replicates whose maximum LRT is at least the LRT of the node)/(B + 1).
+}
 \description{
 Define the class for Unconditional Bernoulli TBSS and directly inherit from TS
 
