@@ -68,13 +68,13 @@ Note if data regarding followup time is not provided we use the convention that 
 \examples{
 library(TBSS)
 data(patient_level_data, package = 'TBSS')
-attach(patient_level_data)
 ## load tree
 data(tree_example, package = 'TBSS')
 
 ## running the algorithm with 30 permutation with 2 cores in parallel for this example
 ## default is 999 without parallelization
-mod_tbss = permutationTBSS(cohort, diagnosis_table, tree_example,
+mod_tbss = permutationTBSS(patient_level_data$cohort,
+                      patient_level_data$diagnosis_table, tree_example,
 		       B = 30, parallel = TRUE, ncpus = 2) 
 
 summary(mod_tbss) |> head()
